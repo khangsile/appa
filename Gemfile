@@ -8,7 +8,7 @@ group :development, :test do
 end
 
 # Include devise gem for authentication system
-gem 'devise', '3.0.0.rc'
+gem 'devise'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
