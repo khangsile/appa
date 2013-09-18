@@ -16,7 +16,6 @@
 /tmp
 
 # Extras
-database.yml
 doc/
 *.sqp
 *~
