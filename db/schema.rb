@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130918233307) do
+ActiveRecord::Schema.define(version: 20130919025349) do
+
+  create_table "drivers", force: true do |t|
+    t.integer  "user_id"
+    t.boolean  "status"
+    t.decimal  "balance"
+    t.decimal  "fee"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_reviews", force: true do |t|
+    t.integer  "rating"
+    t.integer  "reviewer_id"
+    t.integer  "reviewee_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "content"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
