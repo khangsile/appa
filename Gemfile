@@ -5,6 +5,8 @@ group :development, :test do
 	gem 'sqlite3'
 	# Use rspec for testing
 	gem 'rspec-rails'
+	# Use FactoryGirl to create dummy objects for DB
+	gem 'factory_girl_rails'
 end
 
 # Use stripe library
