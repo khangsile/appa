@@ -10,7 +10,7 @@ group :development, :test do
 end
 
 # Use stripe library
-gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
+# gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 # Include devise gem for authentication system
 gem 'devise'
