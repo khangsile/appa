@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
 	before do
-		@user.new(email: "example@uky.edu", password: "validpassword",
+		@user = User.new(email: "example@uky.edu", password: "validpassword",
 							password_confirmation: "validpassword")
 	end
 
@@ -10,7 +10,7 @@ describe User do
 
 	it { should respond_to(:email) }
 	it { should respond_to(:password) }
-	it { should respond_to(:password) }
+	it { should respond_to(:password_confirmation) }
 
 	it { should be_valid }
 
@@ -46,4 +46,12 @@ describe User do
 		end
 	end
 
+	#TODO - move to controller later
+	describe "when user has posted review" do
+		its(:given_user_reviews) { should_not be_empty }
+	end
+
+	describe "when user has not posted review" do
+		its(:given_user_reviews) { should be_empty }
+	end
 end
