@@ -9,6 +9,11 @@ group :development, :test do
 	gem 'factory_girl_rails'
 end
 
+# Twitter bootstrap
+gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
+                          :github => 'anjlab/bootstrap-rails',
+                          :branch => '3.0.0'
+
 # Use stripe library
 # gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
