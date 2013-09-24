@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe User do
 	before do
-		@user = User.new(email: "example@uky.edu", password: "validpassword",
-							password_confirmation: "validpassword")
+		@user = FactoryGirl.build(:user)
+		# @user = User.new(first_name: "Jerry", last_name: "Seinfeld",
+		# 								email: "jerry@gmail.com", password: "tonyle123",
+		# 								password_confirmation: "tonyle123")
 	end
 
 	subject { @user }

@@ -7,6 +7,8 @@ group :development, :test do
 	gem 'rspec-rails'
 	# Use FactoryGirl to create dummy objects for DB
 	gem 'factory_girl_rails'
+	# Use capybara for testing
+	gem "capybara"
 end
 
 # Twitter bootstrap

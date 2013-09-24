@@ -8,15 +8,15 @@
 </head>
 <%= render "layouts/header" %>
 <body>
-
+<div class="container">
 <% if notice %>
-  <p class="alert alert-notice"><%= notice %></p>
+  <div class="alert alert-notice"><%= notice %></div>
 <% end %>
 <% if alert %>
-  <p class="alert alert-error"><%= alert %></p>
+  <div class="alert alert-error"><%= alert %></div>
 <% end %>
 
 <%= yield %>
-
+</div>
 </body>
 </html>
