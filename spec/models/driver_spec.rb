@@ -17,4 +17,9 @@ describe Driver do
   	before { @driver.user_id = nil }
 		it { should_not be_valid }
   end
+
+  describe "when fee is less than zero" do
+  	before { @driver.fee = -1.0 }
+  	it { should_not be_valid }
+  end
 end
