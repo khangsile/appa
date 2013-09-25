@@ -7,6 +7,12 @@ Appa::Application.routes.draw do
   # root 'welcome#index'
   root :to => 'home#index'
 
+  namespace :api do
+    namespace :v1 do
+      resources :sessions, only: [:create, :destroy]
+    end
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
