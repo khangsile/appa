@@ -20,7 +20,7 @@ gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
 # gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 # Include devise gem for authentication system
-gem 'devise'
+gem 'devise', '~>3.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'

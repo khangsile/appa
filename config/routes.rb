@@ -9,6 +9,7 @@ Appa::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :registrations, only: [:create]
       resources :sessions, only: [:create, :destroy]
     end
   end

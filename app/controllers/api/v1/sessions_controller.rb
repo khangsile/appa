@@ -3,13 +3,12 @@ module Api
 		class Api::V1::SessionsController < Api::BaseController
 			before_filter :authenticate_user!, except: [:create]
 			before_filter :ensure_user_login_param_exists, only: [:create]
-			before_filter :ensure_email_param_exists, only: [:create]
-			before_filter :ensure_password_param_exists, only: [:create]
+			# before_filter :ensure_email_param_exists, only: [:create]
+			# before_filter :ensure_password_param_exists, only: [:create]
 			respond_to :json
 
 			def create
-				# Rails.Logger.info("Dodge this.")
-				resource = User.find_for_database_authentication(email: params[:user_login][:email])
+				resource = User.find_for_database_authentication(email: params[:user_login][:email].downcase)
 				return invalid_login_attempt unless resource
 
 				if resource.valid_password?(params[:user_login][:password])
@@ -22,8 +21,11 @@ module Api
 			end
 
 			def destroy
-				current_user.reset_authentication_token
-				render json: { success: true }, status: :ok
+				user = User.find_by_authentication_token(params[:id])
+				if !user.nil?
+					user.reset_authentication_token!
+					render json: { success: true }, status: :ok
+				end
 			end
 
 			protected

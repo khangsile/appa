@@ -1,9 +1,14 @@
 class User < ActiveRecord::Base
-  before_save { self.email = self.email.downcase }
+  before_save do
+   self.email = self.email.downcase
+   self.ensure_authentication_token
+  end
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :token_authenticatable
 
   has_one :driver
   has_many :user_reviews, as: :reviewer
