@@ -7,7 +7,6 @@ module Api
 			def create
 				user = User.new(user_params)
 				if user.save
-					user.reload
 					render json: {auth_token: user.authentication_token, email: user.email}, status: :created
 					return
 				else
