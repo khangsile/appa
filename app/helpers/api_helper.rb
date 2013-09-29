@@ -10,4 +10,8 @@ module ApiHelper
 		end
 	end
 
+	def render_unauthorized_msg
+		render json: { success: false, message: "Unauthorized access" }, status: :unauthorized
+	end
+
 end
