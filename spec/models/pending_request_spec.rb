@@ -12,7 +12,7 @@ describe PendingRequest do
 		its(:time_sent) { should > @time_sent }
 	end
 
-	context "finishing" do
+	context "when finishing" do
 		before do
 			@finished_request = PendingRequest.finish_pending_request(@pending_request,
 				{accepted: true})

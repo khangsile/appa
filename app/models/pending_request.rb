@@ -17,6 +17,10 @@ class PendingRequest < Request
 		return request
 	end
 
+	def self.retrieve(id)
+		Request.find(id)
+	end
+
 	private
 
 	# store pending request
@@ -24,10 +28,6 @@ class PendingRequest < Request
 	# cache provides better access and removes a trip to db
 	def store
 		save
-	end
-
-	def self.retrieve(id)
-		Request.find(id)
 	end
 
 	def create
