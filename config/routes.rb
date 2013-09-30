@@ -11,6 +11,7 @@ Appa::Application.routes.draw do
     namespace :v1 do
       resources :registrations, only: [:create]
       resources :sessions, only: [:create, :destroy]
+      post "users/:id", to: "users#show", as: "user"
     end
   end
 

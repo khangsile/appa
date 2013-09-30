@@ -3,11 +3,11 @@ module Api
 		class Api::V1::UsersController < Api::ProtectedApiController
 			respond_to :json
 
-			before { @user.find(params[:id]) }
+			before_filter { @user = User.find(params[:id]) }
 
 			def show
 				if current_user?
-					render json: user, status: :ok 			
+					render json: @user, status: :ok 			
 				else
 					render_unauthorized_msg
 				end
