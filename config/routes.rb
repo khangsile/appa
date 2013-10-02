@@ -11,7 +11,11 @@ Appa::Application.routes.draw do
     namespace :v1 do
       resources :registrations, only: [:create]
       resources :sessions, only: [:create, :destroy]
-      post "users/:id", to: "users#show", as: "user"
+      # get "user/:id", to: "users#show", as: "user"
+      # patch "user/:id", to: "users#update"
+      resources :users, only: [:show, :update]
+      resources :drivers, only: [:show, :update]
+
     end
   end
 

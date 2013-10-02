@@ -4,16 +4,21 @@ group :development, :test do
 	# Use sqlite3 as the database for Active Record
 	gem 'sqlite3'
 
+	# For debugging
+	gem 'debugger'
+
 	# Use rspec for testing
 	gem 'rspec-rails'
 	gem 'rspec'
-	gem 'rspec-core'
 	
 	# Use FactoryGirl to create dummy objects for DB
 	gem 'factory_girl_rails'
 	# Use capybara for testing
 	gem "capybara"
 end
+
+# Rable for JSON api templating
+gem 'rabl'
 
 # Twitter bootstrap
 gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',

@@ -25,4 +25,5 @@ class User < ActiveRecord::Base
   def received_user_reviews
   	UserReview.where(reviewee: self)
   end
+
 end

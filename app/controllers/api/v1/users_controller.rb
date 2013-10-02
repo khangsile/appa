@@ -1,33 +1,25 @@
 module Api
 	module V1
-		class Api::V1::UsersController < Api::ProtectedApiController
-			respond_to :json
+		class Api::V1::UsersController < Api::ProtectedUserController
+			respond_to :json			
 
-			before_filter { @user = User.find(params[:id]) }
-
-			def show
-				if current_user?
-					render json: @user, status: :ok 			
-				else
-					render_unauthorized_msg
-				end
+			def show		
 			end
 
-			def edit
-				if current_user?
-					@user.update_attributes(params[:user_info])
+			def update
+				if @user.update_attributes(user_params)
+					render 'api/v1/users/show'
 				else
-					render_unauthorized_msg
-				end 
+					render_invalid_action(@user)
+				end
 			end
 
 			private
 
-			def current_user?
-				@user.authentication_token == params[:auth_token]
+			def user_params
+				params.require(:user).permit(:email)
 			end
 
 		end
 	end
 end
-

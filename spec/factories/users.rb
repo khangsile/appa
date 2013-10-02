@@ -7,3 +7,10 @@ FactoryGirl.define do
 		password_confirmation "changeme"
 	end
 end
+
+FactoryGirl.define do
+	factory :driver do
+		user
+		balance 100
+	end
+end
