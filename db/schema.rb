@@ -11,13 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130925061807) do
+ActiveRecord::Schema.define(version: 20131002021730) do
 
   create_table "drivers", force: true do |t|
     t.integer  "user_id"
-    t.boolean  "status"
     t.decimal  "balance"
-    t.decimal  "fee"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
