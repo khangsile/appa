@@ -37,10 +37,10 @@ describe "User API" do
 	end
 
 	def get_user(params)
-		get api_v1_user_path(user), params, headers
+		get api_v1_user_path(@user), params, headers
 	end
 
 	def edit_user(params)
-		put api_v1_user_path(user), params.as_json, headers
+		put api_v1_user_path(@user), params, headers
 	end
 end

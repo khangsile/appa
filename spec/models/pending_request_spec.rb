@@ -3,7 +3,8 @@ require 'spec_helper'
 describe PendingRequest do
 	before do
 		@time_sent = Time.now
-		@pending_request = PendingRequest.new(driver_id: 1, user_id: 2)
+		# @pending_request = PendingRequest.new(driver_id: 1, user_id: 2)
+		@pending_request = FactoryGirl.build(:pending_request)
 	end
 
 	subject { @pending_request }

@@ -3,9 +3,6 @@ require 'spec_helper'
 describe User do
 	before do
 		@user = FactoryGirl.build(:user)
-		# @user = User.new(first_name: "Jerry", last_name: "Seinfeld",
-		# 								email: "jerry@gmail.com", password: "tonyle123",
-		# 								password_confirmation: "tonyle123")
 	end
 
 	subject { @user }
@@ -13,11 +10,6 @@ describe User do
 	it { should respond_to(:email) }
 	it { should respond_to(:password) }
 	it { should respond_to(:password_confirmation) }
-
-	# it { should validate_presence_of(:email) }
-	# it { should validate_uniqueness_of(:email) }
-	# it { should validate_presence_of(:first_name) }
-	# it { should validate_presence_of(:last_name) }
 
 	it { should be_valid }
 
@@ -55,10 +47,10 @@ describe User do
 
 	#TODO - move to controller later
 	describe "when user has posted review" do
-		its(:given_user_reviews) { should_not be_empty }
+		# its(:given_user_reviews) { should_not be_empty }
 	end
 
 	describe "when user has not posted review" do
-		its(:given_user_reviews) { should be_empty }
+		# its(:given_user_reviews) { should be_empty }
 	end
 end

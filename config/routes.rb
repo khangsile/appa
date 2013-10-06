@@ -9,13 +9,15 @@ Appa::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+
       resources :registrations, only: [:create]
       resources :sessions, only: [:create, :destroy]
       # get "user/:id", to: "users#show", as: "user"
       # patch "user/:id", to: "users#update"
       resources :users, only: [:show, :update]
       resources :drivers, only: [:show, :update]
-
+      resources :requests, only: [:create, :update]
+      resources :driver_reviews, only: [:create, :update, :destroy, :show]
     end
   end
 

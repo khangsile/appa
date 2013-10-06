@@ -1,5 +1,3 @@
-include ApiHelper
-
 module Api
 	class ProtectedUserController < Api::BaseController
 		before_filter :enfore_authorization

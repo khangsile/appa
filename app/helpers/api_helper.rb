@@ -1,4 +1,5 @@
 module ApiHelper
+
 	def authorize_user_from_token!
 		user = get_user_by_token
 		if user.nil? || user.id != Integer(params[:id])

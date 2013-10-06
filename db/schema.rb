@@ -11,11 +11,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131002021730) do
+ActiveRecord::Schema.define(version: 20131005162843) do
+
+  create_table "driver_reviews", force: true do |t|
+    t.integer  "rating"
+    t.string   "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "request_id"
+  end
+
+  add_index "driver_reviews", ["request_id"], name: "index_driver_reviews_on_request_id"
 
   create_table "drivers", force: true do |t|
     t.integer  "user_id"
     t.decimal  "balance"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "requests", force: true do |t|
+    t.integer  "driver_id"
+    t.integer  "user_id"
+    t.integer  "trip_id"
+    t.datetime "time_sent"
+    t.datetime "time_accepted"
+    t.boolean  "accepted"
+    t.string   "confirmation_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "trips", force: true do |t|
+    t.string   "driver_id"
+    t.datetime "start_time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

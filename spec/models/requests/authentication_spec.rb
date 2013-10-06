@@ -17,7 +17,7 @@ describe "AuthenticationPages" do
 				click_button "Sign in"
 			end
 
-			it { should have_selector("div.alert.alert-error") }
+			it { should have_selector("div.alert.alert-danger") }
 		end
 
 		describe "with valid information" do

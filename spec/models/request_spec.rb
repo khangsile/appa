@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Request do
+
 	before do
 		@request = FactoryGirl.create(:request)
 	end
