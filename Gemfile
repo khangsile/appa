@@ -1,10 +1,14 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
 
 group :production do
 	# Postgresql
 	gem 'pg'
 end
+
+# For heroku
+gem 'rails_12factor', group: :production
 
 group :development, :test do
 	# Use sqlite3 as the database for Active Record
