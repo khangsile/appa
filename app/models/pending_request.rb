@@ -5,24 +5,18 @@ class PendingRequest < Request
 	def initialize(attributes = nil)
 		super(attributes)
 		self.time_sent = Time.now
-		store
 	end
 
-	def self.finish_pending_request(id, request_info={accepted: false})
-		request =	retrieve(id)
-		request.create_trip(request_info[:trip_info])
+	def finish_pending_request!(request_info={accepted: false})
+		self.create_trip(request_info[:trip_info])
 		request_info[:time_accepted] = Time.now
 		request_info[:confirmation_code] = SecureRandom.hex(3)
-		request.update_attributes!(request_info)
-
-		return request
+		self.update_attributes!(request_info)
 	end
 
 	def self.retrieve(id)
-		Request.where(id: id)
+		Request.where(id: id).first
 	end
-
-	private
 
 	# store pending request
 	# pending request can be stored in db
@@ -30,6 +24,8 @@ class PendingRequest < Request
 	def store
 		save
 	end
+
+	private
 
 	def create
 		super

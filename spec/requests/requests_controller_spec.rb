@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Request for Driver" do
+describe "Requests Controller" do
 	before do
 		@request = FactoryGirl.build(:pending_request)
 	end
@@ -20,10 +20,10 @@ describe "Request for Driver" do
 			its(:body) { should include('driver_id') }
 		end
 
-		context "when request is invalid" do
+		context "when request does not have driver" do
 			before do
 			  send_pending_request(auth_token: @request.user.authentication_token, 
-			  	request: { user_id: @request.user_id})
+			  	request: { user_id: @request.user_id })
 			end
 
 			it { should_not be_success }

@@ -13,16 +13,25 @@ describe PendingRequest do
 		its(:time_sent) { should > @time_sent }
 	end
 
-	context "when finishing" do
-		before do
-			@finished_request = PendingRequest.finish_pending_request(@pending_request,
-				{accepted: true})
+	context "when driver_id is not present" do
+		it "should not be valid with blank driver" do
+			@pending_request.driver_id = ""
+			@pending_request.should_not be_valid
 		end
 
-		subject { @finished_request }
+		it "should not be valid with no driver" do
+			@pending_request.driver_id = nil
+			@pending_request.should_not be_valid
+		end
+	end
+
+	context "when finishing" do
+		before do
+			@pending_request.finish_pending_request!(accepted: true)
+		end
 
 		describe "time sent is before time accepted" do
-			its(:time_sent) { should < @finished_request.time_accepted }
+			its(:time_sent) { should < @pending_request.time_accepted }
 		end
 
 		describe "corresponding trip is created" do

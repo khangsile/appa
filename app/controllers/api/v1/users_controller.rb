@@ -1,7 +1,7 @@
 module Api
 	module V1
-		class Api::V1::UsersController < Api::ProtectedUserController
-			respond_to :json			
+		class Api::V1::UsersController < Api::ProtectedResourceController
+			before_filter(only: :update) { authorize_user_by_id }
 
 			def show		
 			end

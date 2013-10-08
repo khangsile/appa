@@ -2,7 +2,7 @@ include ApiHelper
 
 module Api
 	module V1
-		class Api::V1::SessionsController < Api::BaseController
+		class Api::V1::SessionsController < Api::ProtectedResourceController
 			# before_filter :authenticate_user_from_token!, except: [:create]
 			before_filter :ensure_user_login_param_exists, only: [:create]
 			# before_filter :ensure_email_param_exists, only: [:create]
@@ -21,13 +21,8 @@ module Api
 			end
 
 			def destroy
-				user = User.find_by_authentication_token(params[:auth_token])
-				if !user.nil?
-					user.reset_authentication_token!
-					render json: { success: true }, status: :ok
-				else
-					render json: { success: false, message: "Unauthorized access" }, status: :unauthorized
-				end
+				@user.reset_authentication_token!
+				render json: { success: true }, status: :ok
 			end
 
 			protected

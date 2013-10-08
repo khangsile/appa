@@ -1,9 +1,8 @@
 module Api
 	module V1
 		class DriverReviewsController < Api::ProtectedResourceController
-			respond_to :json
-			before_filter :authorize_owner_of_request, only: [:create]
-			before_filter :authorize_owner_of_review, only: [:update]
+			before_filter(only: :create) { authorize_user_on method(:is_owner_of_request?) }
+			before_filter(only: :update) { authorize_user_on method(:is_owner_of_review?) }
 
 			def create
 				@review = DriverReview.new(create_driver_review_params)
@@ -18,14 +17,14 @@ module Api
 
 			private
 
-			def authorize_owner_of_request
+			def is_owner_of_request?(user)
 				request = Request.where(id: params[:driver_review][:request_id]).first
-				render_unauthorized_msg unless request && request.user_id == @user.id
+				request && (request.user_id == user.id)
 			end
 
-			def authorize_owner_of_review
+			def is_owner_of_review?(user)
 				@review = DriverReview.where(id: params[:id]).first
-				render_unauthorized_msg unless @review && @review.request.user_id == @user.id
+				@review && @review.request.user_id == user.id
 			end
 
 			def create_driver_review_params

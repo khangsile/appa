@@ -1,7 +1,6 @@
 module Api
 	module V1
 		class Api::V1::RegistrationsController < Api::BaseController
-			respond_to :json
 
 			def create
 				@user = User.new(user_params)

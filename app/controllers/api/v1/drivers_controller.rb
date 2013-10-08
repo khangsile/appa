@@ -1,7 +1,7 @@
 module Api
 	module V1
-		class DriversController < Api::ProtectedUserController
-			respond_to :json
+		class DriversController < Api::ProtectedResourceController
+			before_filter(only: :update) { authorize_user_on method(:is_driver?) }
 
 			def show
 			end
@@ -15,6 +15,10 @@ module Api
 			end
 
 			private
+
+			def is_driver?(user)
+				Integer(params[:id]) == user.id
+			end
 
 			def user_params
 				params.require(:user).permit(:email)
