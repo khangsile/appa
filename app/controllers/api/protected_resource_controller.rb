@@ -1,5 +1,5 @@
 module Api
 	class Api::ProtectedResourceController < Api::BaseController
-		include AccessControl
+		include ApiAccessControl
 	end
 end

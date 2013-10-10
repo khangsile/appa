@@ -1,6 +1,6 @@
 require 'active_support/concern'
 
-module AccessControl
+module ApiAccessControl
 	extend ActiveSupport::Concern
 
 	included do
@@ -17,7 +17,7 @@ module AccessControl
 
 	def get_user_by_token
 		user_token = params[:auth_token].presence
-		user = user_token && User.find_by_authentication_token(user_token)
+		user = user_token && User.where(authentication_token: user_token).first
 	end
 
 end

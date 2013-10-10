@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131005162843) do
+ActiveRecord::Schema.define(version: 20131010005524) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "postgis"
 
   create_table "driver_reviews", force: true do |t|
     t.integer  "rating"
@@ -21,7 +25,7 @@ ActiveRecord::Schema.define(version: 20131005162843) do
     t.integer  "request_id"
   end
 
-  add_index "driver_reviews", ["request_id"], name: "index_driver_reviews_on_request_id"
+  add_index "driver_reviews", ["request_id"], :name => "index_driver_reviews_on_request_id"
 
   create_table "drivers", force: true do |t|
     t.integer  "user_id"
@@ -47,15 +51,16 @@ ActiveRecord::Schema.define(version: 20131005162843) do
     t.datetime "start_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "latlon",     limit: nil
   end
 
   create_table "user_reviews", force: true do |t|
     t.integer  "rating"
+    t.string   "content"
     t.integer  "reviewer_id"
     t.integer  "reviewee_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "content"
   end
 
   create_table "users", force: true do |t|
@@ -76,8 +81,8 @@ ActiveRecord::Schema.define(version: 20131005162843) do
     t.string   "authentication_token"
   end
 
-  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

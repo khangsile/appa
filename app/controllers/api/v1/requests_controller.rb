@@ -15,19 +15,24 @@ module Api
 			end
 
 			def update
-				@pending_request = PendingRequst.finish_pending_request(params[:id],
-					params[:request])
+				@pending_request.finish_pending_request!(finish_request_params)
+				render 'api/v1/requests/create'
 			end
 
 			private
 
 			def is_driver_of_request?(user)
 				@pending_request = PendingRequest.retrieve(params[:id])
-				@pending_request.driver_id == user.driver.id
+				driver = user.driver
+				driver && @pending_request.driver_id == driver.id
 			end
 
 			def request_params
 				params.require(:request).permit(:user_id, :driver_id)
+			end
+
+			def finish_request_params
+				params.require(:request).permit(:accepted)
 			end
 
 		end

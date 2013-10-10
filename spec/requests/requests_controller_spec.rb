@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Requests Controller" do
+describe "RequestsController" do
 	before do
 		@request = FactoryGirl.build(:pending_request)
 	end
@@ -31,10 +31,37 @@ describe "Requests Controller" do
 
 	end
 
+	context "#update" do
+		before do
+			@request.store
+		end
+
+		context "when driver owns request" do
+			before do
+				update_pending_request(@request.id, auth_token: @request.driver.user.authentication_token,
+					request: { accepted: true })
+			end
+			it { should be_success }
+		end
+
+		context "when driver does not own request" do
+			before do
+				user = FactoryGirl.create(:user)
+				update_pending_request(@request.id, auth_token: user.authentication_token,
+					request: { accepted: true })
+			end
+
+			it { should_not be_success }
+		end
+	end
 end
 
 def send_pending_request(params)
 	post api_v1_requests_path, params, headers
+end
+
+def update_pending_request(request, params)
+	patch api_v1_request_path(request), params, headers
 end
 
 

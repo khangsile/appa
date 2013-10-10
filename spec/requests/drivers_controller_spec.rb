@@ -76,8 +76,6 @@ describe "DriverControllers" do
 				@driver.reload
 				@driver.user.email.should == change_email
 			end
-
-			its(:body) { should include 'success'}
 		end
 
 	end

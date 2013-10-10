@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "DriverReviews Controller" do
+describe "DriverReviewsController" do
 	before do
 		@request = FactoryGirl.create(:request)
 	end

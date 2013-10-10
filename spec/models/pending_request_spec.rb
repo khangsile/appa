@@ -5,6 +5,7 @@ describe PendingRequest do
 		@time_sent = Time.now
 		# @pending_request = PendingRequest.new(driver_id: 1, user_id: 2)
 		@pending_request = FactoryGirl.build(:pending_request)
+		@pending_request.store
 	end
 
 	subject { @pending_request }
@@ -19,7 +20,7 @@ describe PendingRequest do
 			@pending_request.should_not be_valid
 		end
 
-		it "should not be valid with no driver" do
+		it "has no driver_id" do
 			@pending_request.driver_id = nil
 			@pending_request.should_not be_valid
 		end

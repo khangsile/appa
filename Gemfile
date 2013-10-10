@@ -7,12 +7,15 @@ group :production do
 	gem 'pg'
 end
 
+gem 'activerecord-postgis-adapter'
+
 # For heroku
 gem 'rails_12factor', group: :production
 
 group :development, :test do
 	# Use sqlite3 as the database for Active Record
-	gem 'sqlite3'
+	# gem 'sqlite3'
+	gem 'pg'
 
 	# For debugging
 	gem 'debugger'

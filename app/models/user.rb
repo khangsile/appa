@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include TokenAuthenticatable
+
   before_save do
    self.email = self.email.downcase
    self.ensure_authentication_token
@@ -25,30 +27,6 @@ class User < ActiveRecord::Base
 
   def received_user_reviews
   	UserReview.where(reviewee: self)
-  end
-
-  def ensure_authentication_token
-    self.authentication_token = generate_authentication_token if authentication_token.blank?
-  end
-
-  def reset_authentication_token!
-    self.authentication_token = generate_authentication_token
-    save(validate: false)
-  end
-
-  def ensure_authentication_token!
-    if authentication_token.blank?
-      reset_authentication_token
-    end
-  end
- 
-  private
-  
-  def generate_authentication_token
-    loop do
-      token = Devise.friendly_token
-      break token unless User.where(authentication_token: token).first
-    end
   end
 
 end
