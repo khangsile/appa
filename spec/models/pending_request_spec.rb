@@ -38,6 +38,12 @@ describe PendingRequest do
 		describe "corresponding trip is created" do
 			its(:trip_id) { should_not be_nil }
 		end
+
+		it "creates a trip with latlon" do			
+			@pending_request.trip.latlon.should_not be_nil
+		end
+
+
 	end
 
 end

@@ -41,7 +41,9 @@ describe "RequestsController" do
 				update_pending_request(@request.id, auth_token: @request.driver.user.authentication_token,
 					request: { accepted: true })
 			end
+
 			it { should be_success }
+			
 		end
 
 		context "when driver does not own request" do

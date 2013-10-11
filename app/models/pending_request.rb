@@ -3,10 +3,10 @@
 class PendingRequest < Request
 
 	def finish_pending_request!(request_info={accepted: false})
-		self.create_trip(request_info[:trip_info])
 		request_info[:time_accepted] = Time.now
 		request_info[:confirmation_code] = SecureRandom.hex(3)
-		self.update_attributes!(request_info)
+		self.update_attributes(request_info)
+		self.create_trip!(request_info[:trip]) if request_info[:accepted]
 	end
 
 	def self.retrieve(id)
