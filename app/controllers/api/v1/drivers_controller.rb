@@ -1,7 +1,7 @@
 module Api
 	module V1
 		class DriversController < Api::ProtectedResourceController
-			before_filter(only: :update) { authorize_user_on method(:is_driver?) }
+			before_filter(only: [:update, :update_location]) { authorize_user_on method(:is_driver?) }
 
 			def show
 			end
@@ -14,10 +14,19 @@ module Api
 				end
 			end
 
+			def update_location
+				factory = Driver.rgeo_factory_for_column(:location)
+				@user.driver.update_attribute(:location,factory.point(params[:lon].to_f,params[:lat].to_f))
+			end
+
 			private
 
 			def is_driver?(user)
 				Integer(params[:id]) == user.id
+			end
+
+			def location_params
+				params.permit([:lat,:lon])
 			end
 
 			def user_params

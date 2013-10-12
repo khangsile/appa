@@ -80,12 +80,30 @@ describe "DriverControllers" do
 
 	end
 
+	describe "#update_location" do
+
+		context "when valid driver updates location" do
+			before do
+				edit_location(auth_token: @driver.user.authentication_token, lon: -80.3, lat: 88.1)
+			end
+
+			it { should be_success }
+			its(:body) { should include '-80.3 88.1' }
+		end
+	end
+
+
+
 	def get_driver(params)
 		get api_v1_driver_path(@driver.user.id), params, headers
 	end
 
 	def edit_driver(params)
 		patch api_v1_driver_path(@driver.user.id), params, headers
+	end
+
+	def edit_location(params)
+		patch api_v1_driver_location_path(@driver.user.id), params, headers
 	end
 
 end
