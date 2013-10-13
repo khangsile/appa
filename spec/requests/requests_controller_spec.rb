@@ -33,14 +33,25 @@ describe "RequestsController" do
 	context "#update" do
 		before do
 			@request.store
-			@headers['X-AUTH-TOKEN'] = @request.driver.user.authentication_token
 		end
 
 		context "when driver answers request" do
-			before { update_pending_request(accepted: true) }
+			before do
+				@headers['X-AUTH-TOKEN'] = @request.driver.user.authentication_token
+			  update_pending_request(accepted: true)
+			end
 
 			it { should be_success }
+		end
 
+		context "when driver does not own request" do
+			before do
+				bad_driver = FactoryGirl.create(:driver)
+				@headers['X-AUTH-TOKEN'] = bad_driver.user.authentication_token
+				update_pending_request(accepted: true)
+			end
+
+			it { should_not be_success }
 		end
 	end
 

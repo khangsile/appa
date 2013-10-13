@@ -16,8 +16,8 @@ module Api
 			end
 
 			def update
-				@pending_request = PendingRequst.finish_pending_request(params[:id],
-					params[:request])
+				@request = PendingRequest.where(id: params[:id]).first
+				@request.finish_pending_request!(update_params)
 			end
 
 			private
@@ -29,6 +29,10 @@ module Api
 
 			def request_params
 				params.permit(:user_id, :driver_id)
+			end
+
+			def update_params
+				params.permit(:accepted)
 			end
 
 		end

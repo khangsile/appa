@@ -10,7 +10,7 @@ module Api
 			respond_to :json
 
 			def create
-				resource = User.find_for_database_authentication(email: params[:user_login][:email].downcase)
+				resource = User.find_for_database_authentication(email: params[:email].downcase)
 				
 				if resource && resource.valid_password?(params[:user_login][:password])
 					resource.ensure_authentication_token!
