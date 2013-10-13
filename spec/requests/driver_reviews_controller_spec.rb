@@ -3,16 +3,19 @@ require 'spec_helper'
 describe "DriverReviews Controller" do
 	before do
 		@request = FactoryGirl.create(:request)
+		@headers = {'HTTP_ACCEPT' => 'application/json', 
+			'X-AUTH-TOKEN' => @request.user.authentication_token }
 	end
 
 	subject{ response }
 	
-	let(:headers) { {'HTTP_ACCEPT' => 'application/json'} }
+	let(:headers) { {'HTTP_ACCEPT' => 'application/json',
+		'X-AUTH-TOKEN' => @request.user.authentication_token } }
 
 	context "#create" do
 		before do
-			@params = {driver_review: { request_id: @request.id, content: "Lorem Ipsum",
-				rating: 3}, auth_token: @request.user.authentication_token }
+			@params = { request_id: @request.id, content: "Lorem Ipsum",
+				rating: 3 }
 		end
 
 		context "when review is valid" do
@@ -24,7 +27,7 @@ describe "DriverReviews Controller" do
 
 		context "when user has not ridden with driver" do
 			before do
-				@params[:driver_review][:request_id] = 100
+				@params[:request_id] = 100
 				create_review(@params)
 			end
 
@@ -44,8 +47,7 @@ describe "DriverReviews Controller" do
 		context "when user does not own review" do
 			before do
 				user = FactoryGirl.create(:user)
-				params = { auth_token: user.authentication_token,
-					driver_review: { content: "Hello world", rating: 5} }
+				params = { content: "Hello world", rating: 5 }
 				update_review(@review, params)
 			end
 
@@ -54,8 +56,8 @@ describe "DriverReviews Controller" do
 
 		context "when user owns review" do
 			before do
-				params = { auth_token: @review.request.user.authentication_token,
-					driver_review: { content: "Hello world", rating: 5} }
+				@headers['X-AUTH-TOKEN'] = @review.request.user.authentication_token
+				params = { content: "Hello world", rating: 5 }
 				update_review(@review, params)
 			end
 
@@ -73,10 +75,10 @@ describe "DriverReviews Controller" do
 end
 
 def create_review(params)
-	post api_v1_driver_reviews_path, params, headers
+	post api_v1_driver_reviews_path, params, @headers
 end 
 
 def update_review(id, params)
-	put api_v1_driver_review_path(id), params, headers
+	put api_v1_driver_review_path(id), params, @headers
 end
 

@@ -18,7 +18,7 @@ module Api
 			private
 
 			def is_owner_of_request?(user)
-				request = Request.where(id: params[:driver_review][:request_id]).first
+				request = Request.where(id: params[:request_id]).first
 				request && (request.user_id == user.id)
 			end
 
@@ -28,11 +28,11 @@ module Api
 			end
 
 			def create_driver_review_params
-				params.require(:driver_review).permit(:request_id,:content,:rating)
+				params.permit(:request_id,:content,:rating)
 			end
 
 			def update_driver_review_params
-				params.require(:driver_review).permit(:content,:rating)
+				params.permit(:content,:rating)
 			end
 		end
 	end
