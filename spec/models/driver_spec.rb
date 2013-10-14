@@ -8,7 +8,7 @@ describe Driver do
   subject { @driver }
 
   it { should respond_to(:user_id) }
-
+  its(:balance) { should == 0.0 }
   it { should be_valid }
 
   describe "when user_id is not present" do

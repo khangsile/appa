@@ -14,6 +14,7 @@ Appa::Application.routes.draw do
       resources :sessions, only: [:create, :destroy]
       # get "user/:id", to: "users#show", as: "user"
       # patch "user/:id", to: "users#update"
+      post "registrations/create_driver", to: "registrations#create_driver", as: "create_driver"
       resources :users, only: [:show, :update]
       resources :drivers, only: [:show, :update]
       resources :requests, only: [:create, :update]
