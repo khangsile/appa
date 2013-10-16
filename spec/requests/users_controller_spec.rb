@@ -1,18 +1,17 @@
 require 'spec_helper'
 
-describe "User API" do
+describe "UsersController" do
 
 	before do
 		@user = FactoryGirl.create(:user)
 	end
 
-	let(:user) { @user }
 	let(:headers) { {'HTTP_ACCEPT' => 'application/json'} }
 	subject { response }
 
 	context "when user is valid" do
 		before do
-			get_user(auth_token: user.authentication_token)
+			get_user({})
 		end
 
 		it { should be_success }

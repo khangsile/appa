@@ -12,7 +12,7 @@ module Api
 			end
 
 			def create_driver
-				if @user.driver.exists?
+				if @user.driver
 					render_unauthorized_msg
 				else
 					@user.create_driver(driver_params)

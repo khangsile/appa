@@ -8,8 +8,8 @@ module Api
 			end
 
 			def update
-				if @user.update_attributes(user_params)
-					render 'api/v1/users/show'
+				if @user.update_attributes(user_params) 
+					render 'api/v1/users/edit'
 				else
 					render_invalid_action(@user)
 				end
@@ -19,6 +19,10 @@ module Api
 
 			def user_params
 				params.permit(:email)
+			end
+
+			def driver_params
+				params.require(:driver).permit(:balance)
 			end
 
 		end

@@ -1,3 +1,3 @@
 object false
 node(:auth_token) { |m| @user.authentication_token }
-child(@user) { attributes :id, :first_name, :last_name, :email }
+child(@user) { extends('api/v1/users/user_base', locals: { hide_email: false }) }

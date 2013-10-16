@@ -7,6 +7,8 @@ group :production do
 	gem 'pg'
 end
 
+gem 'newrelic_rpm'
+
 # For heroku
 gem 'rails_12factor', group: :production
 
