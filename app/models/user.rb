@@ -19,6 +19,10 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true
   validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
+  def full_name
+    "#{first_name} #{last_name}".titleize
+  end
+
   def given_user_reviews
   	UserReview.where(reviewer: self)
   end

@@ -4,25 +4,17 @@ module Api
 			before_filter(only: :update) { authorize_user_by_id }
 
 			def show
-				@user = User.where(id: params[:id]).first
+				render_not_found unless @user = User.where(id: params[:id]).first
 			end
 
 			def update
-				if @user.update_attributes(user_params) 
-					render 'api/v1/users/edit'
-				else
-					render_invalid_action(@user)
-				end
+				render_invalid_action(@user) unless @user.update(user_params)
 			end
 
 			private
 
 			def user_params
-				params.permit(:email)
-			end
-
-			def driver_params
-				params.require(:driver).permit(:balance)
+				params.permit(:email,:first_name,:last_name)
 			end
 
 		end

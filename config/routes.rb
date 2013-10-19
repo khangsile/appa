@@ -16,7 +16,7 @@ Appa::Application.routes.draw do
       # patch "user/:id", to: "users#update"
       post "registrations/create_driver", to: "registrations#create_driver", as: "create_driver"
       resources :users, only: [:show, :update]
-      resources :drivers, only: [:show, :update]
+      resources :drivers, only: [:show, :update, :create]
       resources :requests, only: [:create, :update]
       resources :driver_reviews, only: [:create, :update, :destroy, :show]
     end

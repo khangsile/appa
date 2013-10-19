@@ -21,13 +21,25 @@ module ApiHelper
 		user = user_token && User.find_by_authentication_token(user_token)
 	end
 
+	def render_success
+		render json: { success: true }, status: :ok
+	end
+
 	def render_unauthorized_msg
 		render 'api/v1/errors/unauthorized', status: :unauthorized
+	end
+
+	def render_not_found
+		render json: { success: false, message: "Resource not found"}, status: :not_found
 	end
 
 	def render_invalid_action(resource)
 		render json: { success: false, errors: resource.errors.messages }, 
 			status: :method_not_allowed
+	end
+
+	def render_invalid_login
+		render json: { success: false, message: "Error with your login or password"}, status: :unauthorized
 	end
 
 end

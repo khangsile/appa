@@ -7,7 +7,8 @@ module Api
 				@user = User.new(user_params)
 				unless @user.save
 					warden.custom_failure!
-					render json: @user.errors.messages, status: :unprocessable_entity
+					# render json: @user.errors.messages, status: :unprocessable_entity
+					render_invalid_action(@user)
 				end
 			end
 

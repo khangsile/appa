@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131005162843) do
+ActiveRecord::Schema.define(version: 20131019151906) do
+
+  create_table "cars", force: true do |t|
+    t.integer  "driver_id"
+    t.string   "model"
+    t.integer  "year"
+    t.integer  "num_seats"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "driver_reviews", force: true do |t|
     t.integer  "rating"
@@ -28,6 +37,7 @@ ActiveRecord::Schema.define(version: 20131005162843) do
     t.decimal  "balance"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "fee",        precision: 10, scale: 2
   end
 
   create_table "requests", force: true do |t|

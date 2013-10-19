@@ -4,6 +4,7 @@ module Api
 			before_filter(only: :update) { authorize_user_on method(:is_driver_of_request?) }
 			before_filter(only: :create) { authenticate_user }
 
+			# Create a request for a driver from authenticated user
 			def create
 				begin
 					params[:user_id] = @user.id 
@@ -15,6 +16,7 @@ module Api
 				end
 			end
 
+			# Answer the request according to driver's response
 			def update
 				@request = PendingRequest.where(id: params[:id]).first
 				@request.finish_pending_request!(update_params)

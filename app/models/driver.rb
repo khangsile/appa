@@ -1,9 +1,14 @@
 class Driver < ActiveRecord::Base
-	before_create { self.balance = 0.0 }
+
+	before_validation(on: :create) do 
+		self.fee = 0.0
+		self.balance = 0.0
+	end
 
 	belongs_to :user
 	has_many :requests
 	has_many :driver_reviews
+	has_many :car
 
 	validates :user_id, presence: true
 	validates :balance, numericality: { greater_than_or_equal_to: 0 }
