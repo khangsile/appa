@@ -16,22 +16,25 @@ module AccessControl
 	# ==== Attributes
 	# *+lmbda+ - the lambda method authorizes the current user by a supplied test	
 	def authorize_user_on(lmda)
-		@user = get_user_by_token
-		render_unauthorized_msg unless @user && lmda.call(@user)
+		current_user = get_user_by_token
+		render_unauthorized_msg unless current_user && lmda.call(current_user)
 	end
 
 	# Authenticates the user by the authentication token
 	def authenticate_user
-		@user = get_user_by_token
-		render_unauthorized_msg unless @user
+		current_user = get_user_by_token
+		render_unauthorized_msg unless current_user
 	end
 
 	# Authorizes the user by id
 	# The user's id should equal the id in parameters
 	# Renders an unauthorized message in json if the test fails
 	def authorize_user_by_id
-		@user = get_user_by_token
-		render_unauthorized_msg unless @user && @user.id == params[:id].to_i
+		render_unauthorized_msg unless current_user && current_user.id == params[:id].to_i
+	end
+
+	def current_user
+		@user ||= get_user_by_token
 	end
 
 	# Returns the user associated with the authentication token

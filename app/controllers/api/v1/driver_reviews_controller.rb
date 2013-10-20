@@ -1,8 +1,9 @@
 module Api
 	module V1
 		class DriverReviewsController < Api::ProtectedResourceController
-			before_filter(only: :create) { authorize_user_on method(:is_owner_of_request?) }
-			before_filter(only: [:update, :destroy]) { authorize_user_on method(:is_owner_of_review?) }
+			# before_filter(only: :create) { authorize_user_on method(:is_owner_of_request?) }
+			# before_filter(only: [:update, :destroy]) { authorize_user_on method(:is_owner_of_review?) }
+			load_and_authorize_resource
 
 			# Create a driver review
 			# If validations are not passed, render invalid action
