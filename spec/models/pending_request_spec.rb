@@ -16,12 +16,14 @@ describe PendingRequest do
 	context "when driver_id is not present" do
 		it "should not be valid with blank driver" do
 			@pending_request.driver_id = ""
-			@pending_request.should_not be_valid
+			# @pending_request.should_not be_valid
+			expect(@pending_request).to_not be_valid
 		end
 
 		it "should not be valid with no driver" do
 			@pending_request.driver_id = nil
-			@pending_request.should_not be_valid
+			# @pending_request.should_not be_valid
+			expect(@pending_request).to_not be_valid
 		end
 	end
 

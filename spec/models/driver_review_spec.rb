@@ -13,6 +13,7 @@ describe DriverReview do
 	it { should be_valid }
 	its(:driver_id) { should_not be_nil }
 	its(:user_id) { should_not be_nil }
+	its(:user_id) { should eq(review.request.user_id)}
 
 	context "when request is not present" do
 		before { review.request_id = nil }

@@ -1,13 +1,13 @@
 module Api
 	module V1
 		class DriversController < Api::ProtectedResourceController
-			before_filter(only: :update) { authorize_user_on method(:is_driver?) }
 			before_filter(only: :create) { authenticate_user }
+			before_filter(only: :update) { |c| authorize! c.action_name.to_sym, current_driver }
 
 			# Update the driver
 			# If driver updates don't pass validation, render invalid action
 			def update
-				render_invalid_action(current_driver) unless current_driver.update(driver_params)
+				current_driver.update(driver_params)
 			end
 
 			# Get the driver
@@ -19,11 +19,11 @@ module Api
 			# Create a driver
 			# If the user has a driver, render invalid action
 			def create
-				if @user.driver
-					render_unauthorized_msg
+				if current_user.driver.nil?
+					current_user.create_driver(driver_params)
 				else
-					@driver = @user.create_driver
-					render_invalid_action(@driver) unless @driver.save
+					current_user.driver.errors[:driver] << "already exists"
+					render_invalid_action(current_user.driver)
 				end
 			end
 
@@ -34,11 +34,7 @@ module Api
 			end
 
 			def current_driver
-				@driver ||= Driver.includes(:user).where(id: params[:id]).first
-			end
-
-			def is_driver?(user)
-				params[:id].to_i == user.driver.id
+				@driver ||= Driver.includes(:user).find_by!(id: params[:id])
 			end
 
 		end

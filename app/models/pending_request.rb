@@ -1,11 +1,7 @@
 # todo: abstract the storing and retrieval of pending request 
 
 class PendingRequest < Request
-
-	def initialize(attributes = nil)
-		super(attributes)
-		self.time_sent = Time.now
-	end
+	after_initialize { self.time_sent = Time.now }
 
 	def finish_pending_request!(request_info={accepted: false})
 		self.create_trip(request_info[:trip_info])
@@ -15,7 +11,7 @@ class PendingRequest < Request
 	end
 
 	def self.retrieve(id)
-		Request.where(id: id).first
+		PendingRequest.find_by_id(id)
 	end
 
 	# store pending request

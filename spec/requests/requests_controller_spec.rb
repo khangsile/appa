@@ -13,7 +13,7 @@ describe "RequestsController" do
 		context "when request is valid" do
 			before do
 				headers['X-AUTH-TOKEN'] = user.authentication_token
-				send_pending_request(driver_id: request.driver_id)
+				send_pending_request(request.driver)
 			end
 
 			it "creates request for ride" do
@@ -22,9 +22,9 @@ describe "RequestsController" do
 			end
 		end
 
-		context "when request does not have driver_id" do
+		context "when driver does not exist" do
 			before do
-			  send_pending_request({})
+			  send_pending_request(3)
 			end
 
 			it "does not create a request" do
@@ -41,13 +41,15 @@ describe "RequestsController" do
 
 		context "when driver answers request" do
 			before do
+				request.store
 				headers['X-AUTH-TOKEN'] = request.driver.user.authentication_token
-			  update_pending_request(request, accepted: true)
+			  update_pending_request(request.driver,request, accepted: true)
 			end
 
 			it "completes request" do
 				request.reload
 				expect(response).to be_success
+				expect(response.body).to include "true"
 				expect(request.accepted).to eq(true)
 			end
 		end
@@ -56,7 +58,7 @@ describe "RequestsController" do
 			before do
 				bad_driver = FactoryGirl.create(:driver)
 				headers['X-AUTH-TOKEN'] = bad_driver.user.authentication_token
-				update_pending_request(request, accepted: true)
+				update_pending_request(request.driver,request, accepted: true)
 			end
 
 			it "does not complete request" do
@@ -67,12 +69,12 @@ describe "RequestsController" do
 
 end
 
-def send_pending_request(params)
-	post api_v1_requests_path, params, headers
+def send_pending_request(driver)
+	post api_v1_driver_requests_path(driver), {}, headers
 end
 
-def update_pending_request(request, params)
-	put api_v1_request_path(request), params, headers
+def update_pending_request(driver, request, params)
+	put api_v1_driver_request_path(driver,request), params, headers
 end
 
 

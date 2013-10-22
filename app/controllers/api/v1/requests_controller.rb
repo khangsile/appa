@@ -1,35 +1,31 @@
 module Api
 	module V1
 		class Api::V1::RequestsController < Api::ProtectedResourceController
-			before_filter(only: :update) { authorize_user_on method(:is_driver_of_request?) }
 			before_filter(only: :create) { authenticate_user }
+			before_filter(only: :update) { |c| authorize! c.action_name.to_sym, current_request }
 
 			# Create a request for a driver from authenticated user
 			def create
-				begin
-					params[:user_id] = @user.id 
-					@pending_request = PendingRequest.new(request_params)
-					render_invalid_action(@pending_request) unless @pending_request.store
+				@pending_request = PendingRequest.new(request_params)
+				render_invalid_action(@pending_request) unless @pending_request.store
 
-					# relay user info(location, destination, user_id, request_id) to driver
-					# render_unauthorized_msg
-				end
+				# relay user info(location, destination, user_id, request_id) to driver
 			end
 
-			# Answer the request according to driver's response
+			# Update the request with driver's response
 			def update
-				@request = PendingRequest.where(id: params[:id]).first
 				@request.finish_pending_request!(update_params)
+				# relay response(:accepted...) to user				
 			end
 
 			private
 
-			def is_driver_of_request?(user)
-				@pending_request = PendingRequest.retrieve(params[:id])
-				@pending_request.driver_id == user.driver.id
+			def current_request
+				@request ||= PendingRequest.retrieve(params[:id].to_i)
 			end
 
 			def request_params
+				params[:user_id] = current_user.id
 				params.permit(:user_id, :driver_id)
 			end
 

@@ -1,36 +1,15 @@
 module ApiHelper
 
-	def authorize_user_from_token!
-		user = get_user_by_token
-		if user.nil? || user.id != Integer(params[:id])
-			render_unauthorized_msg
-		end
-		return user
-	end
-
-	def authenticate_user_from_token!
-		user = get_user_by_token
-		if user.nil?
-			render_unauthorized_msg
-		end
-		return user
-	end
-
-	def get_user_by_token
-		user_token = params[:auth_token].presence
-		user = user_token && User.find_by_authentication_token(user_token)
-	end
-
 	def render_success
 		render json: { success: true }, status: :ok
 	end
 
-	def render_unauthorized_msg
-		render 'api/v1/errors/unauthorized', status: :unauthorized
+	def render_unauthorized
+		render json: { success: false, message: "Unauthorized access" }, status: :unauthorized
 	end
 
 	def render_not_found
-		render json: { success: false, message: "Resource not found"}, status: :not_found
+		render json: { success: false, message: "Resource not found" }, status: :not_found
 	end
 
 	def render_invalid_action(resource)

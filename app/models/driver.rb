@@ -11,7 +11,7 @@ class Driver < ActiveRecord::Base
 	has_many :users, through: :driver_reviews
 	has_many :cars
 
-	validates :user_id, presence: true
+	validates :user_id, presence: true, uniqueness: true
 	validates :balance, numericality: { greater_than_or_equal_to: 0 }
 
 end

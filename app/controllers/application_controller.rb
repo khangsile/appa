@@ -9,6 +9,18 @@ class ApplicationController < ActionController::Base
   	@current_ability ||= Ability.new(current_user, params)
   end
 
+  rescue_from CanCan::AccessDenied do |exception|
+  	respond_to do |format|
+  		format.json { render_unauthorized }
+  	end
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+  	respond_to do |format|
+  		format.json { render_not_found }
+  	end
+  end
+
   protected
 
   	def configure_permitted_parameters

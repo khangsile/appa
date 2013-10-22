@@ -22,8 +22,7 @@ module AccessControl
 
 	# Authenticates the user by the authentication token
 	def authenticate_user
-		current_user = get_user_by_token
-		render_unauthorized_msg unless current_user
+		render_unauthorized unless current_user
 	end
 
 	# Authorizes the user by id
@@ -41,7 +40,7 @@ module AccessControl
 	# Returns nil if authentication token is invalid
 	def get_user_by_token
 		user_token = get_auth_token
-		user_token && User.find_by_authentication_token(user_token)
+		user_token && User.find_by(authentication_token: user_token)
 	end
 
 	# Returns the authentication token from the request header

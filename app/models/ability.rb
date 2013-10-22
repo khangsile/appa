@@ -29,12 +29,22 @@ class Ability
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
     user ||= User.new
+
+    # Authorization settings on DriverReviews
     can :show, DriverReview
     can [:update,:destroy], DriverReview, user_id: user.id
-    can :create, DriverReview do
-        @request = Request.where(id: params[:request_id]).first
-        user.id == @request.user_id
+
+    # Authorization settings on Drivers
+    can :update, Driver, user_id: user.id
+
+    # Authorization settings on Requests
+    can :update, Request do |request|
+      user.driver && user.driver.id == request.driver_id
     end
+
+    # Authorization settings on Users
+    can :update, User, id: user.id
+    can [:show,:create], User
 
 
   end

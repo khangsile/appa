@@ -3,7 +3,7 @@ include ApiHelper
 module Api
 	module V1
 		class Api::V1::SessionsController < Api::ProtectedResourceController
-			respond_to :json
+			before_filter(only: :destroy) { render_unauthorized if current_user.nil? }
 
 			# If valid login, create an authentication token for subsequent requests
 			# Otherwise, render invalid login attempt
@@ -20,8 +20,8 @@ module Api
 
 			# Reset the session by resetting the user's authentication token
 			def destroy
-				@user.reset_authentication_token!
-				render json: { success: true }, status: :ok
+				current_user.reset_authentication_token!
+				render_success
 			end
 
 		end

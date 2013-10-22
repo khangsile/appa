@@ -65,14 +65,14 @@ describe "DriversController" do
 		let(:params) { {} }
 
 		context "when user does not have driver profile" do
-			let(:user) { FactoryGirl.create :user }
+			let(:user) { FactoryGirl.create(:user, email: 'nubster@gmail.com') }
 
 			before { headers['X-AUTH-TOKEN'] = user.authentication_token }
 
 			it "creates a driver" do
 				expect{create_driver(params)}.to change(Driver, :count).by(1)
 				expect(response).to be_success
-				expect(response.body).to include user.first_name
+				# expect(response.body).to include user.first_name
 			end
 		end
 
@@ -82,6 +82,7 @@ describe "DriversController" do
 			it "does not create a driver" do
 				expect{create_driver(params)}.to_not change(Driver, :count)
 				expect(response).to_not be_success
+				expect(response.body).to include "already exists"
 			end
 		end
 

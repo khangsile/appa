@@ -7,6 +7,41 @@ describe "UsersController" do
 
 	subject { response }
 
+	describe "#create" do
+		let(:params) do
+			{ email: "nubtub@gmail.com", first_name: "nub",
+				last_name: "tub", password: "nubster1",
+				password_confirmation: "nubster1"
+			}
+		end
+
+		context "when info is valid" do
+			it "creates user" do
+				# create_user(params)
+				expect{create_user(params)}.to change(User, :count).by(1)
+				expect(response).to be_success
+				expect(response.body).to include params[:email]
+				expect(response.body).to include params[:first_name]
+				expect(response.body).to include 'auth_token'
+			end
+		end
+
+		context "when info is invalid" do
+			it "does not have matching password/confirmation" do
+				params[:password_confirmation] = 'nubster2'
+				expect{create_user(params)}.to_not change(User, :count)
+				expect(response).to_not be_success
+			end
+
+			it "does not have unique email" do
+				params[:email] = user.email
+				expect{create_user(params)}.to_not change(User, :count)
+				expect(response).to_not be_success
+			end
+		end
+
+	end
+
 	describe "#show" do
 
 		context "when user exists" do
@@ -28,7 +63,7 @@ describe "UsersController" do
 
 	end
 
-	describe "edit" do
+	describe "#update" do
 		let(:params) { { email: 'nutty@nut.com', } }
 
 		context "when user owns profile" do
@@ -67,5 +102,9 @@ describe "UsersController" do
 
 	def edit_user(user, params)
 		put api_v1_user_path(user), params, headers
+	end
+
+	def create_user(params)
+		post api_v1_users_path, params, headers
 	end
 end
