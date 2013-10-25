@@ -2,12 +2,17 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 
+gem 'cancan'
+
 group :production do
 	# Postgresql
 	gem 'pg'
 end
 
+
 gem 'activerecord-postgis-adapter'
+gem 'newrelic_rpm'
+
 
 # For heroku
 gem 'rails_12factor', group: :production

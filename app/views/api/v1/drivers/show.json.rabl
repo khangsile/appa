@@ -1,5 +1,3 @@
 object @user
-attributes :id, :first_name, :last_name, :email
-child :driver do
-	attributes :balance
-end
+extends('api/v1/users/user_base', locals: {hide_email:true})
+child(@user.driver) { extends('api/v1/drivers/driver') }

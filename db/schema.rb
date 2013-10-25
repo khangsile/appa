@@ -11,11 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131010005524) do
+ActiveRecord::Schema.define(version: 20131019231622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+
+  create_table "cars", force: true do |t|
+    t.integer  "driver_id"
+    t.string   "model"
+    t.integer  "year"
+    t.integer  "num_seats"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "driver_reviews", force: true do |t|
     t.integer  "rating"
@@ -23,16 +32,24 @@ ActiveRecord::Schema.define(version: 20131010005524) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "request_id"
+    t.integer  "user_id"
+    t.integer  "driver_id"
   end
 
+  add_index "driver_reviews", ["driver_id"], :name => "index_driver_reviews_on_driver_id"
   add_index "driver_reviews", ["request_id"], :name => "index_driver_reviews_on_request_id"
+  add_index "driver_reviews", ["user_id"], :name => "index_driver_reviews_on_user_id"
 
   create_table "drivers", force: true do |t|
     t.integer  "user_id"
     t.decimal  "balance"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.spatial  "location",   limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.decimal  "fee",                                                                 precision: 10, scale: 2
   end
+
+  add_index "drivers", ["location"], :name => "index_drivers_on_location", :spatial => true
 
   create_table "requests", force: true do |t|
     t.integer  "driver_id"
@@ -51,7 +68,7 @@ ActiveRecord::Schema.define(version: 20131010005524) do
     t.datetime "start_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "latlon",     limit: nil
+    t.spatial  "latlon",     limit: {:no_constraints=>true}
   end
 
   create_table "user_reviews", force: true do |t|

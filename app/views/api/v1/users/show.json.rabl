@@ -1,4 +1,5 @@
 object @user
-attributes :id, :first_name, :last_name, :email
+extends('api/v1/users/user_base', locals: { hide_email: true })
+
 
 

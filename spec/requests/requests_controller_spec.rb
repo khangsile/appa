@@ -1,70 +1,81 @@
 require 'spec_helper'
 
 describe "RequestsController" do
-	before do
-		@request = FactoryGirl.build(:pending_request)
-	end
+	let(:request) { FactoryGirl.build :pending_request }
+	let(:headers) { {'HTTP_ACCEPT' => 'application/json', 'X-AUTH-TOKEN' => 'fill_in'} }
 
-	let(:headers) { {'HTTP_ACCEPT' => 'application/json'} }
 	subject { response }
 
-	context "#create" do
+	describe "#create" do
+		let(:user) { FactoryGirl.create :user }
 
 		context "when request is valid" do
 			before do
-				send_pending_request(auth_token: @request.user.authentication_token, request: 
-					{ user_id: @request.user_id, driver_id: @request.driver_id})
+				headers['X-AUTH-TOKEN'] = user.authentication_token
+				send_pending_request(request.driver)
 			end
 
-			it { should be_success }
-			its(:body) { should include('driver_id') }
+			it "creates request for ride" do
+				expect(response).to be_success
+				expect(response.body).to include 'driver_id'
+			end
 		end
 
-		context "when request does not have driver" do
+		context "when driver does not exist" do
 			before do
-			  send_pending_request(auth_token: @request.user.authentication_token, 
-			  	request: { user_id: @request.user_id })
+			  send_pending_request(3)
 			end
 
-			it { should_not be_success }
+			it "does not create a request" do
+				expect(response).to_not be_success
+			end
 		end
 
 	end
 
-	context "#update" do
+	describe "#update" do
 		before do
-			@request.store
+			request.store
 		end
 
-		context "when driver owns request" do
+		context "when driver answers request" do
 			before do
-				update_pending_request(@request.id, auth_token: @request.driver.user.authentication_token,
-					request: { accepted: true })
+				request.store
+				headers['X-AUTH-TOKEN'] = request.driver.user.authentication_token
+			  update_pending_request(request.driver,request, accepted: true)
 			end
 
-			it { should be_success }
-			
+			it "completes request" do
+				request.reload
+				expect(response).to be_success
+				expect(response.body).to include "true"
+				expect(request.accepted).to eq(true)
+			end
 		end
 
 		context "when driver does not own request" do
 			before do
-				user = FactoryGirl.create(:user)
-				update_pending_request(@request.id, auth_token: user.authentication_token,
-					request: { accepted: true })
+				bad_driver = FactoryGirl.create(:driver)
+				headers['X-AUTH-TOKEN'] = bad_driver.user.authentication_token
+				update_pending_request(request.driver,request, accepted: true)
 			end
 
-			it { should_not be_success }
+			it "does not complete request" do
+				expect(response.response_code).to eq(401)
+			end
 		end
 	end
+
 end
 
-def send_pending_request(params)
-	post api_v1_requests_path, params, headers
+def send_pending_request(driver)
+	post api_v1_driver_requests_path(driver), {}, headers
 end
 
-def update_pending_request(request, params)
-	patch api_v1_request_path(request), params, headers
+def update_pending_request(driver, request, params)
+	put api_v1_driver_request_path(driver,request), params, headers
 end
+
 
 
 

@@ -16,10 +16,14 @@ class User < ActiveRecord::Base
   has_many :user_reviews, as: :reviewer
   has_many :user_reviews, as: :reviewee
   has_many :driver_reviews
+  has_many :drivers, through: :driver_reviews
 
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+
+  def full_name
+    "#{first_name} #{last_name}".titleize
+  end
 
   def given_user_reviews
   	UserReview.where(reviewer: self)

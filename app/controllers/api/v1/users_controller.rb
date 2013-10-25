@@ -1,24 +1,36 @@
 module Api
 	module V1
 		class Api::V1::UsersController < Api::ProtectedResourceController
-			before_filter(only: :update) { authorize_user_by_id }
+			before_filter(only: [:show,:update]) { |c| authorize! c.action_name.to_sym, target_user }
 
-			def show
-				@user = User.where(id: params[:id]).first
-			end
-
-			def update
-				if @user.update_attributes(user_params)
-					render 'api/v1/users/show'
-				else
+			def create
+				@user = User.new(create_user_params)
+				unless @user.save
+					warden.custom_failure!					
 					render_invalid_action(@user)
 				end
 			end
 
+			def show
+				@user = target_user
+			end
+
+			def update
+				current_user.update!(user_params)
+			end
+
 			private
 
+			def target_user
+				@t_user ||= User.find_by!(id: params[:id])
+			end
+
 			def user_params
-				params.require(:user).permit(:email)
+				params.permit(:email,:first_name,:last_name)
+			end
+
+			def create_user_params
+				params.permit(:email,:first_name,:last_name,:password,:password_confirmation)
 			end
 
 		end

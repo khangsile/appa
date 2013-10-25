@@ -1,6 +1,7 @@
 # todo: abstract the storing and retrieval of pending request 
 
 class PendingRequest < Request
+	after_initialize { self.time_sent = Time.now }
 
 	def finish_pending_request!(request_info={accepted: false})
 		request_info[:time_accepted] = Time.now
@@ -10,8 +11,7 @@ class PendingRequest < Request
 	end
 
 	def self.retrieve(id)
-		request = Request.where(id: id).first
-		request &&= request.becomes(PendingRequest)
+		PendingRequest.find_by!(id: id)
 	end
 
 	# store pending request
