@@ -4,6 +4,11 @@ module Api
 			before_filter(only: :create) { authenticate_user }
 			before_filter(only: :update) { |c| authorize! c.action_name.to_sym, current_driver }
 
+			# Retrieve drivers within given bounding box coordinates
+			def index
+				
+			end
+
 			# Update the driver
 			# If driver updates don't pass validation, render invalid action
 			def update

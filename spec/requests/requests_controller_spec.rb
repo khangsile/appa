@@ -35,17 +35,17 @@ describe "RequestsController" do
 
 	describe "#update" do
 		before do
-			request.store
+			request.submit
 		end
 
 		context "when driver answers request" do
 			before do
-				request.store
 				headers['X-AUTH-TOKEN'] = request.driver.user.authentication_token
-			  update_pending_request(request.driver,request, accepted: true)
+			  # update_pending_request(request.driver,request, accepted: true)
 			end
 
 			it "completes request" do
+				expect{update_pending_request(request.driver, request, accepted: true)}.to change(Trip, :count).by(1)
 				request.reload
 				expect(response).to be_success
 				expect(response.body).to include "true"

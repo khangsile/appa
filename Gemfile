@@ -2,7 +2,13 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 
+gem 'gcm'
+
 gem 'cancan'
+
+gem 'redis-rails'
+
+gem "resque" #, "~> 2.0.0.pre.1", github: "resque/resque"
 
 group :production do
 	# Postgresql

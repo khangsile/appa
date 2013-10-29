@@ -7,7 +7,7 @@ module Api
 			# Create a request for a driver from authenticated user
 			def create
 				@pending_request = PendingRequest.new(request_params)
-				render_invalid_action(@pending_request) unless @pending_request.store
+				render_invalid_action(@pending_request) unless @pending_request.submit
 
 				# relay user info(location, destination, user_id, request_id) to driver
 			end

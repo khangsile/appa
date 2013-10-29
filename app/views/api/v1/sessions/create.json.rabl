@@ -1,3 +1,7 @@
 object false
-node(:auth_token) { |m| @user.authentication_token }
-child(@user) { extends('api/v1/users/user_base', locals: { hide_email: false }) }
+node(:auth_token) { @user.authentication_token }
+child(@user) do
+	extends('api/v1/users/user_base', locals: { hide_email: false })
+	child({driver: :driver_profile}, unless: @user.driver.nil?) { extends('api/v1/drivers/driver') }
+end
+

@@ -17,6 +17,8 @@ describe "SessionsController" do
 			it "logs in" do
 				expect(response).to be_success
 				expect(response.body).to include user.authentication_token
+				expect(response.body).to_not include 'driver_profile'
+
 			end
 		end
 
@@ -29,6 +31,20 @@ describe "SessionsController" do
 			it "does not log in" do
 				expect(response.response_code).to eq(401)
 				expect(response.body).to include "Error with your login or password"
+			end
+		end
+
+		context "when driver login is valid" do
+			let(:driver) { FactoryGirl.create :driver }
+			before do
+				params = { email: driver.user.email, password: driver.user.password }
+				create_session(params)
+			end
+
+			it "logs in" do
+				expect(response).to be_success
+				expect(response.body).to include driver.user.first_name
+				expect(response.body).to include 'driver_profile'
 			end
 		end
 
