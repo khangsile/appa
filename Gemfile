@@ -1,6 +1,7 @@
-source 'https://rubygems.org'
-
+source 'http://rubygems.org'
 ruby '2.0.0'
+
+gem 'therubyracer', :group => :assets
 
 gem 'gcm'
 
@@ -95,3 +96,8 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+gem 'rubber'
+gem 'open4'
+gem 'gelf'
+gem 'graylog2_exceptions', :git => 'git://github.com/wr0ngway/graylog2_exceptions.git'
+gem 'graylog2-resque'
