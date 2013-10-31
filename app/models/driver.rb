@@ -5,6 +5,9 @@ class Driver < ActiveRecord::Base
 		self.balance = 0.0
 	end
 
+	set_rgeo_factory_for_column(:location,
+		RGeo::Geographic.spherical_factory(:srid => 4326))
+
 	belongs_to :user
 	has_many :requests
 	has_many :driver_reviews
@@ -13,5 +16,30 @@ class Driver < ActiveRecord::Base
 
 	validates :user_id, presence: true, uniqueness: true
 	validates :balance, numericality: { greater_than_or_equal_to: 0 }
+
+	scope :active, -> { where(active: true) }
+
+	def set_location(lon, lat)
+		factory = Driver.rgeo_factory_for_column(:location)
+		# update(location: factory.point(lon,lat))
+		self.location = factory.point(lon,lat)
+	end
+
+	def self.within(left, bottom, right, top)
+		where(%{
+			Drivers.location && ST_MakeEnvelope(%f, %f, %f, %f, 4326)
+			} % [left,bottom,right,top]).active
+	end
+
+	# def self.within(longitude, latitude, distance)
+	# 	where(%{
+	# 		ST_DWithin(
+	# 			Drivers.location,
+	# 			ST_GeographyFromText('SRID=4326;POINT(%f, %f)'),
+	# 			%d
+	# 		)
+	# 		} % [longitude, latitude, distance])
+	# end
+
 
 end

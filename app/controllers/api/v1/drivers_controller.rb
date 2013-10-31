@@ -2,11 +2,12 @@ module Api
 	module V1
 		class DriversController < Api::ProtectedResourceController
 			before_filter(only: :create) { authenticate_user }
-			before_filter(only: :update) { |c| authorize! c.action_name.to_sym, current_driver }
+			before_filter(only: [:update,:update_location]) { |c| authorize! c.action_name.to_sym, current_driver }
 
-			# Retrieve drivers within given bounding box coordinates
+
+			# Get drivers within given bounding box coordinates
 			def index
-				
+				@drivers = Driver.within(params[:left], params[:bottom], params[:right], params[:top])				
 			end
 
 			# Update the driver
@@ -32,16 +33,32 @@ module Api
 				end
 			end
 
+			def update_location
+				factory = Driver.rgeo_factory_for_column(:location)
+				current_driver.update(location: factory.point(params[:lon].to_f,params[:lat].to_f))
+			end
+
 			private
 
 			def driver_params
 				params.permit(:fee)
 			end
 
-			def current_driver
-				@driver ||= Driver.includes(:user).find_by!(id: params[:id])
+			def location_params
+				params.permit([:lat,:lon])
 			end
 
+			def current_driver
+				@driver ||= get_driver
+			end
+
+			def get_driver
+				if(params[:driver_id].blank?)
+					Driver.includes(:user).find_by!(id: params[:id])
+				else
+					Driver.includes(:user).find_by!(id: params[:driver_id])
+				end
+			end
 		end
 	end
 end

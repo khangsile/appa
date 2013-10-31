@@ -4,6 +4,13 @@ module Api
 			before_filter(only: :create) { authenticate_user }
 			before_filter(only: [:update,:destroy]) { |c| authorize! c.action_name.to_sym, current_review }
 
+			# Get driver reviews
+			# Requires no authentication
+			def index
+				# @reviews = Driver.find_by!(id: params[:driver_id]).driver_reviews#.order('created_at DESC').to_a
+				@reviews = DriverReview.where(driver_id: params[:driver_id])
+			end
+
 			# Create a driver review
 			# If validations are not passed, render invalid action
 			def create

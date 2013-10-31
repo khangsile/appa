@@ -36,6 +36,7 @@ class Ability
 
     # Authorization settings on Drivers
     can :update, Driver, user_id: user.id
+    can :update_location, Driver, user_id: user.id
 
     # Authorization settings on Requests
     can :update, Request do |request|

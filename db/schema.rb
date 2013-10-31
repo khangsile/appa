@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131029141513) do
+ActiveRecord::Schema.define(version: 20131030044717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20131029141513) do
     t.datetime "updated_at"
     t.spatial  "location",   limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.decimal  "fee",                                                                 precision: 10, scale: 2
+    t.boolean  "active"
   end
 
   add_index "drivers", ["location"], :name => "index_drivers_on_location", :spatial => true

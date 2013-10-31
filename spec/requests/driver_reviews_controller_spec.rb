@@ -137,6 +137,30 @@ describe "DriverReviewsController" do
 		end
 	end
 
+	describe "#index" do
+		let(:driver) { FactoryGirl.create :driver }
+
+		before do						
+			requests = FactoryGirl.create_list :request, 5, driver: driver, accepted: true
+			requests.each do |r|
+				DriverReview.create!(request_id: r.id, user_id: r.user_id, driver_id: r.driver_id,
+					content: 'Hello', rating: 5)
+			end
+			get_reviews(driver)
+		end
+
+		it "gets driver's reviews" do
+			expect(response).to be_success
+			expect(response.body).to include 'dnfakf'
+			reviews = JSON.parse(response.body)
+			expect(reviews.length).to eq(5)
+		end
+	end
+
+end
+
+def get_reviews(driver)
+	get api_v1_driver_driver_reviews_path(driver), {}, headers
 end
 
 def get_review(driver,review)

@@ -87,19 +87,61 @@ describe "DriversController" do
 		end
 
 	end
+
+	describe "#update_location" do
+
+		context "when valid driver updates location" do
+			before do
+				headers['X-AUTH-TOKEN'] = driver.user.authentication_token
+				update_location(driver, lon: -80.3, lat: 88.1)
+			end
+
+			it { should be_success }
+			its(:body) { should include '-80.3 88.1' }
+		end
+	end
+
+	describe "#index" do
+		let(:params) { {left:75,bottom:75,top:85,right:85}}
+
+		before do
+			drivers = FactoryGirl.create_list :driver, 5, active: true
+			drivers.each do |d|
+				d.set_location(80,80)
+				d.save
+			end
+			get_drivers(params)
+		end
+
+		it "gets list of drivers" do
+			expect(response).to be_success
+			body = JSON.parse(response.body)
+			expect(body.length).to eq(5)
+		end
+	end
+
 end 
 
-def create_driver(params)
-	post api_v1_drivers_path, params, headers
+def get_drivers(params)
+	get api_v1_drivers_path, params, headers
 end
 
 def get_driver(driver)
 	get api_v1_driver_path(driver), {}, headers
 end
 
+def update_location(driver, params)
+	patch api_v1_driver_driver_location_path(driver), params, headers
+end
+
 def update_driver(driver, params)
 	patch api_v1_driver_path(driver), params, headers
 end
+
+def create_driver(params)
+	post api_v1_drivers_path, params, headers
+end
+
 
 
 
