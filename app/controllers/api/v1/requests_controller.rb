@@ -4,6 +4,13 @@ module Api
 			before_filter(only: :create) { authenticate_user }
 			before_filter(only: :update) { |c| authorize! c.action_name.to_sym, current_request }
 
+			# Get a users requests
+			def index
+				user = User.find_by!(id: params[:user_id])
+				authorize! :index, user
+				@requests = user.requests
+			end
+
 			# Create a request for a driver from authenticated user
 			def create
 				@pending_request = PendingRequest.new(request_params)

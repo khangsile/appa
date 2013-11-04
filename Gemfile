@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
-
 ruby '2.0.0'
+
+gem 'therubyracer', :group => :assets
 
 gem 'gcm'
 
@@ -15,10 +16,9 @@ group :production do
 	gem 'pg'
 end
 
-
 gem 'activerecord-postgis-adapter'
+gem 'rgeo'
 gem 'newrelic_rpm'
-
 
 # For heroku
 gem 'rails_12factor', group: :production
@@ -95,3 +95,8 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+gem 'rubber'
+gem 'open4'
+gem 'gelf'
+gem 'graylog2_exceptions', :git => 'git://github.com/wr0ngway/graylog2_exceptions.git'
+gem 'graylog2-resque'
