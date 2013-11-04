@@ -1,5 +1,5 @@
 class EnablePostgis < ActiveRecord::Migration
   def change
-  	enable_extension :postgis
+  	# enable_extension :postgis
   end
 end

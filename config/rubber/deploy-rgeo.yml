@@ -1,0 +1,2 @@
+#RGeo requires the packages libgeos and proj for internal calculations 
+packages: [libgeos-3.2.2, proj] 

@@ -42,6 +42,7 @@ class Ability
     can :update, Request do |request|
       user.driver && user.driver.id == request.driver_id
     end
+    can :index, Request, user_id: user.id
 
     # Authorization settings on Users
     can :update, User, id: user.id

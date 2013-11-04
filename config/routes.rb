@@ -12,7 +12,9 @@ Appa::Application.routes.draw do
       resources :registrations, only: [:create]
       resources :sessions, only: [:create, :destroy]
 
-      resources :users, only: [:show, :update, :create]
+      resources :users, only: [:show, :update, :create] do
+        get "requests", to: "requests#index", as: "requests"
+      end
       resources :drivers, only: [:index, :show, :update, :create] do
         resources :requests, only: [:create, :update]
         resources :driver_reviews, only: [:index, :create, :update, :destroy, :show]

@@ -1,4 +1,3 @@
-
 roles:
   apache:
     packages: [apache2, libapache2-mod-proxy-html, libcurl4-openssl-dev, libapache2-mod-xsendfile]

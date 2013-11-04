@@ -6,6 +6,41 @@ describe "RequestsController" do
 
 	subject { response }
 
+	describe "#index" do
+		let(:user) { FactoryGirl.create :user }
+
+		context "when user has requests" do
+			before do
+				FactoryGirl.create_list(:request, 5, user: user)
+			end
+
+			context "when user is authorized" do
+				before do
+					headers['X-AUTH-TOKEN'] = user.authentication_token
+					get_requests(user)
+				end
+
+				it "gets users requests" do
+					expect(response).to be_success
+					body = JSON.parse(response.body)
+					expect(body.length).to eq(5)
+				end
+			end
+
+			context "when user is unauthorized" do
+				before do
+					headers['X-AUTH-TOKEN'] = user.authentication_token + 'a'
+					get_requests(user)
+				end
+
+				it "does not get users requests" do
+					expect(response.response_code).to eq(401)
+				end
+			end
+		end
+
+	end
+
 	describe "#create" do
 		let(:user) { FactoryGirl.create :user }
 
@@ -66,6 +101,10 @@ describe "RequestsController" do
 		end
 	end
 
+end
+
+def get_requests(user)
+	get api_v1_user_requests_path(user), {}, headers
 end
 
 def send_pending_request(driver)

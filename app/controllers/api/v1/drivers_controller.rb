@@ -7,7 +7,7 @@ module Api
 
 			# Get drivers within given bounding box coordinates
 			def index
-				@drivers = Driver.within(params[:left], params[:bottom], params[:right], params[:top])				
+				@drivers = Driver.includes(:user).within(params[:left], params[:bottom], params[:right], params[:top])				
 			end
 
 			# Update the driver
@@ -35,6 +35,9 @@ module Api
 
 			def update_location
 				factory = Driver.rgeo_factory_for_column(:location)
+				if factory.is_a?(Proc)
+					factory = factory.call({})
+				end				
 				current_driver.update(location: factory.point(params[:lon].to_f,params[:lat].to_f))
 			end
 

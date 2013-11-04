@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 ruby '2.0.0'
 
 gem 'therubyracer', :group => :assets
@@ -16,10 +16,9 @@ group :production do
 	gem 'pg'
 end
 
-
 gem 'activerecord-postgis-adapter'
+gem 'rgeo'
 gem 'newrelic_rpm'
-
 
 # For heroku
 gem 'rails_12factor', group: :production

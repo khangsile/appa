@@ -56,10 +56,17 @@ namespace :rubber do
             create_replication_user_cmd = "CREATE USER #{env.db_replication_user} WITH NOSUPERUSER NOCREATEROLE REPLICATION"
             create_replication_user_cmd << " PASSWORD '#{env.db_replication_pass}'" if env.db_replication_pass
 
+            script_dir = "/usr/share/postgresql/#{rubber_env.postgresql_ver}/contrib"
             rubber.sudo_script "create_master_db", <<-ENDSCRIPT
               sudo -i -u postgres psql -c "#{create_user_cmd}"
               sudo -i -u postgres psql -c "#{create_replication_user_cmd}"
               sudo -i -u postgres psql -c "CREATE DATABASE #{env.db_name} WITH OWNER #{env.db_user}"
+
+              #Initialize db with postgis data 
+              sudo -u postgres psql -d #{env.db_name} -f #{script_dir}/postgis-1.5/postgis.sql 
+              sudo -u postgres psql -d #{env.db_name} -f #{script_dir}/postgis-1.5/spatial_ref_sys.sql 
+              sudo -u postgres psql -d #{env.db_name} -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO #{env.db_user}" 
+              sudo -u postgres psql -d #{env.db_name} -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO #{env.db_user}" 
             ENDSCRIPT
           end
         end

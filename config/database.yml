@@ -21,8 +21,14 @@ test:
   host: localhost
 
 production:
-  adapter: postgresql
-  database: db/productions
+  adapter: postgis
+  database: db/production
+  encoding: unicode
+  postgis_extension: true
+  schema_search_path: public,postgis
   pool: 5
   timeout: 5000
   host: localhost
+
+
+
