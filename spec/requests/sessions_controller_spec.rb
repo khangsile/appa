@@ -9,22 +9,21 @@ describe "SessionsController" do
 	describe "#create" do
 
 		context "when user login is valid" do
-			before do
-				params = { email: user.email, password: user.password }
-				create_session(params)
+			let(:params) do
+				{ email: user.email, password: user.password, registration_id: 'f33', platform: 'android' }
 			end
 
 			it "logs in" do
+				expect{create_session(params)}.to change(Device, :count).by(1)
 				expect(response).to be_success
 				expect(response.body).to include user.authentication_token
 				expect(response.body).to_not include 'driver_profile'
-
 			end
 		end
 
 		context "when user login is invalid" do
 			before do
-				params = { email: user.email, password: user.password*2 }
+				params = { email: user.email, password: user.password*2, registration_id: 'f33', platform: 'android' }
 				create_session(params)
 			end
 
@@ -37,7 +36,7 @@ describe "SessionsController" do
 		context "when driver login is valid" do
 			let(:driver) { FactoryGirl.create :driver }
 			before do
-				params = { email: driver.user.email, password: driver.user.password }
+				params = { email: driver.user.email, password: driver.user.password, registration_id: 'f33', platform: 'android' }
 				create_session(params)
 			end
 

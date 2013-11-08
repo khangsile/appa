@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131030044717) do
+ActiveRecord::Schema.define(version: 20131107000549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20131030044717) do
     t.integer  "num_seats"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "make"
   end
 
   create_table "devices", force: true do |t|
@@ -54,6 +55,7 @@ ActiveRecord::Schema.define(version: 20131030044717) do
     t.spatial  "location",   limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.decimal  "fee",                                                                 precision: 10, scale: 2
     t.boolean  "active"
+    t.decimal  "rating",                                                              precision: 2,  scale: 1
   end
 
   add_index "drivers", ["location"], :name => "index_drivers_on_location", :spatial => true
@@ -75,8 +77,12 @@ ActiveRecord::Schema.define(version: 20131030044717) do
     t.datetime "start_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.spatial  "latlon",     limit: {:no_constraints=>true}
+    t.spatial  "start_location", limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "end_location",   limit: {:srid=>4326, :type=>"point", :geographic=>true}
   end
+
+  add_index "trips", ["end_location"], :name => "index_trips_on_end_location", :spatial => true
+  add_index "trips", ["start_location"], :name => "index_trips_on_start_location", :spatial => true
 
   create_table "user_reviews", force: true do |t|
     t.integer  "rating"

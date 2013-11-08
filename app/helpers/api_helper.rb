@@ -1,3 +1,5 @@
+
+# Provides standard JSON responses that can be called in the controller
 module ApiHelper
 
 	def render_success

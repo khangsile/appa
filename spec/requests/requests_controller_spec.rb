@@ -10,12 +10,10 @@ describe "RequestsController" do
 		let(:user) { FactoryGirl.create :user }
 
 		context "when user has requests" do
-			before do
-				FactoryGirl.create_list(:request, 5, user: user)
-			end
-
+	
 			context "when user is authorized" do
 				before do
+  				FactoryGirl.create_list(:request, 5, user: user)
 					headers['X-AUTH-TOKEN'] = user.authentication_token
 					get_requests(user)
 				end
@@ -29,7 +27,9 @@ describe "RequestsController" do
 
 			context "when user is unauthorized" do
 				before do
-					headers['X-AUTH-TOKEN'] = user.authentication_token + 'a'
+					FactoryGirl.create_list(:request, 5, user: user)
+					bad_user = FactoryGirl.create :user
+					headers['X-AUTH-TOKEN'] = bad_user.authentication_token
 					get_requests(user)
 				end
 
@@ -43,14 +43,26 @@ describe "RequestsController" do
 
 	describe "#create" do
 		let(:user) { FactoryGirl.create :user }
+		let(:params) do
+			{ start: {
+					lat: 81,
+					lon: 82
+				},
+				'end' => {
+					lat: 82,
+					lon: 84
+				}
+			}
+		end
 
 		context "when request is valid" do
 			before do
 				headers['X-AUTH-TOKEN'] = user.authentication_token
-				send_pending_request(request.driver)
+				request.driver.update(active: true)
 			end
 
 			it "creates request for ride" do
+				expect{send_pending_request(request.driver, params)}.to change(Trip, :count).by(1)
 				expect(response).to be_success
 				expect(response.body).to include 'driver_id'
 			end
@@ -58,10 +70,21 @@ describe "RequestsController" do
 
 		context "when driver does not exist" do
 			before do
-			  send_pending_request(3)
+			  send_pending_request(3, params)
 			end
 
 			it "does not create a request" do
+				expect(response).to_not be_success
+			end
+		end
+
+		context "when driver is inactive" do
+			before do
+				headers['X-AUTH-TOKEN'] = user.authentication_token
+				send_pending_request(request.driver, params)
+			end
+
+			it "does not request for ride" do
 				expect(response).to_not be_success
 			end
 		end
@@ -76,11 +99,11 @@ describe "RequestsController" do
 		context "when driver answers request" do
 			before do
 				headers['X-AUTH-TOKEN'] = request.driver.user.authentication_token
-			  # update_pending_request(request.driver,request, accepted: true)
+			  update_pending_request(request.driver,request, accepted: true)
 			end
 
 			it "completes request" do
-				expect{update_pending_request(request.driver, request, accepted: true)}.to change(Trip, :count).by(1)
+				# expect{update_pending_request(request.driver, request, accepted: true)}.to change(Trip, :count).by(1)
 				request.reload
 				expect(response).to be_success
 				expect(response.body).to include "true"
@@ -107,8 +130,8 @@ def get_requests(user)
 	get api_v1_user_requests_path(user), {}, headers
 end
 
-def send_pending_request(driver)
-	post api_v1_driver_requests_path(driver), {}, headers
+def send_pending_request(driver, params)
+	post api_v1_driver_requests_path(driver), params, headers
 end
 
 def update_pending_request(driver, request, params)

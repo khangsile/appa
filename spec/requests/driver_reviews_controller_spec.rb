@@ -15,7 +15,6 @@ describe "DriverReviewsController" do
 		context "when review is valid" do
 			before do 
 				headers['X-AUTH-TOKEN'] = request.user.authentication_token
-				# create_review(params)
 			end
 
 			it "creates driver review" do
@@ -23,6 +22,11 @@ describe "DriverReviewsController" do
 				expect(response).to be_success
 				expect(response.body).to include content
 				expect(request.user.driver_reviews.length).to eq(1)
+			end
+
+			it "updates the driver's rating" do
+				create_review(request.driver,params)
+				expect{request.driver.reload}.to change(request.driver, :rating)
 			end
 		end
 
@@ -151,7 +155,7 @@ describe "DriverReviewsController" do
 
 		it "gets driver's reviews" do
 			expect(response).to be_success
-			expect(response.body).to include 'dnfakf'
+			# expect(response.body).to include 'dnfakf'
 			reviews = JSON.parse(response.body)
 			expect(reviews.length).to eq(5)
 		end

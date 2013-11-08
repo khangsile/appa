@@ -1,5 +1,5 @@
 collection @drivers
-attributes :id, :fee
+extends('api/v1/drivers/driver')
 node(:lon) { |d| d.location.lon }
 node(:lat) { |d| d.location.lat }
 child(:user) do

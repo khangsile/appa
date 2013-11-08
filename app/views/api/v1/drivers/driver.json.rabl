@@ -1,2 +1,2 @@
 object @driver
-attributes :id, :fee
+attributes :id, :fee, :rating, :active

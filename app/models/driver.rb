@@ -1,5 +1,6 @@
 class Driver < ActiveRecord::Base
 
+	# Initialize driver's fee and balance
 	before_validation(on: :create) do 
 		self.fee = 0.0
 		self.balance = 0.0
@@ -19,12 +20,14 @@ class Driver < ActiveRecord::Base
 
 	scope :active, -> { where(active: true) }
 
+	# Set the current location of driver
 	def set_location(lon, lat)
 		factory = Driver.rgeo_factory_for_column(:location)
 		# update(location: factory.point(lon,lat))
 		self.location = factory.point(lon,lat)
 	end
 
+	# Class method to find all drivers within a bounding box
 	def self.within(left, bottom, right, top)
 		where(%{
 			Drivers.location && ST_MakeEnvelope(%f, %f, %f, %f, 4326)
@@ -40,6 +43,5 @@ class Driver < ActiveRecord::Base
 	# 		)
 	# 		} % [longitude, latitude, distance])
 	# end
-
 
 end

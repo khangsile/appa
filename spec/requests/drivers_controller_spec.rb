@@ -4,43 +4,43 @@ describe "DriversController" do
 
 	let(:headers) { {'HTTP_ACCEPT' => 'application/json', 
 		'X-AUTH-TOKEN' => 'fill_in' } }
-	let(:driver) { FactoryGirl.create :driver }
+		let(:driver) { FactoryGirl.create :driver }
 
-	subject { response }
+		subject { response }
 
-	describe "#show" do
+		describe "#show" do
 
-		context "when driver does not exist" do
-			before { get_driver(1) }
+			context "when driver does not exist" do
+				before { get_driver(1) }
 
-			it "does not get driver" do
-				expect(response.body).to include "Resource not found"
-				expect(response.response_code).to eq(404)
-			end			
-		end
-
-		context "when driver exists" do
-			before { get_driver(driver) }
-
-			it "gets driver" do
-				expect(response).to be_success
-				expect(response.body).to include driver.user.first_name
-			end
-		end
-	end
-
-	describe "#update" do
-		let(:params) { { id: 10, fee: 10 } }
-
-		context "when authorized driver" do
-			before do
-				headers['X-AUTH-TOKEN'] = driver.user.authentication_token
-				update_driver(driver, params)
+				it "does not get driver" do
+					expect(response.body).to include "Resource not found"
+					expect(response.response_code).to eq(404)
+				end			
 			end
 
-			it "updates driver" do
-				expect(response).to be_success
-				expect(response.body).to include "#{params[:fee]}"
+			context "when driver exists" do
+				before { get_driver(driver) }
+
+				it "gets driver" do
+					expect(response).to be_success
+					expect(response.body).to include driver.user.first_name
+				end
+			end
+		end
+
+		describe "#update" do
+			let(:params) { { id: 10, fee: 10 } }
+
+			context "when authorized driver" do
+				before do
+					headers['X-AUTH-TOKEN'] = driver.user.authentication_token
+					update_driver(driver, params)
+				end
+
+				it "updates driver" do
+					expect(response).to be_success
+					expect(response.body).to include "#{params[:fee]}"
 				# expect(response.body).to include "id: #{driver.id}"
 			end
 		end
@@ -102,7 +102,6 @@ describe "DriversController" do
 	end
 
 	describe "#index" do
-		let(:params) { {left:75,bottom:75,top:85,right:85}}
 
 		before do
 			drivers = FactoryGirl.create_list :driver, 5, active: true
@@ -113,11 +112,25 @@ describe "DriversController" do
 			get_drivers(params)
 		end
 
-		it "gets list of drivers" do
-			expect(response).to be_success
-			body = JSON.parse(response.body)
-			expect(body.length).to eq(5)
+		context "when drivers are within screen" do
+			let(:params) { {left:75,bottom:75,top:85,right:85} }
+
+			it "gets list of drivers" do
+				expect(response).to be_success
+				body = JSON.parse(response.body)
+				expect(body.length).to eq(5)
+			end
 		end
+
+		context "when drivers are not within screen" do
+			let(:params) { {left:82,bottom:82,top:85,right:85} }
+			it "does not get drivers that are outside of bb" do
+				expect(response).to be_success
+				body = JSON.parse(response.body)
+				expect(body.length).to eq(0)
+			end
+		end
+
 	end
 
 end 

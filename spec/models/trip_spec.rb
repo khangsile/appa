@@ -1,5 +1,10 @@
 require 'spec_helper'
 
 describe Trip do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+	it { should respond_to(:start_location) }
+	it { should respond_to(:end_location) }
+  it { should respond_to(:driver_id) }
+  it { should respond_to(:start_time) }
+
 end

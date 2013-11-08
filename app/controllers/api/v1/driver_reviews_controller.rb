@@ -16,6 +16,7 @@ module Api
 			def create
 				@review = DriverReview.new(create_driver_review_params)
 				render_invalid_action(@review) unless @review.save
+				logger.debug @review.errors.messages				
 			end
 
 			# Update the driver review unless the unless validations do not pass

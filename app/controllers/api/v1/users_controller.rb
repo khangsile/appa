@@ -3,6 +3,7 @@ module Api
 		class Api::V1::UsersController < Api::ProtectedResourceController
 			before_filter(only: [:show,:update]) { |c| authorize! c.action_name.to_sym, target_user }
 
+			# Create a new user
 			def create
 				@user = User.new(create_user_params)
 				unless @user.save
@@ -22,7 +23,7 @@ module Api
 			private
 
 			def target_user
-				@t_user ||= User.find_by!(id: params[:id])
+				@target_user ||= User.find_by!(id: params[:id])
 			end
 
 			def user_params

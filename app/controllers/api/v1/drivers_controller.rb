@@ -44,7 +44,7 @@ module Api
 			private
 
 			def driver_params
-				params.permit(:fee)
+				params.permit(:fee,:active)
 			end
 
 			def location_params

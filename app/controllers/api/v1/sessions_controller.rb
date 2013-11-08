@@ -11,14 +11,17 @@ module Api
 				resource = User.find_for_database_authentication(email: params.require(:email).downcase)
 				
 				if resource && resource.valid_password?(params.require(:password))
-					resource.ensure_authentication_token!
+					resource.ensure_authentication_token!					
 					@user = resource
+					device = Device.where(user_id: @user.id, platform: params[:platform]).first_or_initialize
+					device.registration_id = params[:registration_id]
+					device.save
 				else
 					render_invalid_login
 				end
 			end
 
-			# Reset the session by resetting the user's authentication token
+			# Destroy the session by resetting the user's authentication token
 			def destroy
 				current_user.reset_authentication_token!
 				render_success

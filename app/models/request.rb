@@ -1,7 +1,5 @@
 class Request < ActiveRecord::Base
 
-	# before_create { self.time_sent = Time.now }
-
 	belongs_to :user
 	belongs_to :driver
 	belongs_to :trip

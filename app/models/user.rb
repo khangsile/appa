@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_one :driver
+  has_one :device
   has_many :requests
   has_many :user_reviews, as: :reviewer
   has_many :user_reviews, as: :reviewee

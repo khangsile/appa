@@ -1,3 +1,3 @@
 object @review
 attributes :id, :content, :rating
-node(:user) { |r| r.request.user.full_name }
+node(:user) { |r| r.user.full_name }

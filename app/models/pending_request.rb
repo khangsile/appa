@@ -1,19 +1,24 @@
 require 'resque'
 require 'SubmitRequest'
+require 'AnswerRequest'
 # todo: abstract the storing and retrieval of pending request 
 
 class PendingRequest < Request
 	after_initialize do 
 		self.time_sent = Time.now 
-		# self.accepted = false
 	end
 
+	# Finish a pending request with given response argument
+	# Once a pending request is complete, place an answer_request job on Resque queue
 	def finish_pending_request!(request_info={accepted: false})
-		self.time_accepted = Time.now		
+		self.time_accepted = Time.now
 		self.confirmation_code = SecureRandom.hex(3)
 		self.accepted = request_info[:accepted]
-		self.create_trip!(request_info[:trip]) if self.accepted
-		save!
+		if save
+			answer_request
+		else
+			false
+		end
 	end
 
 	def self.retrieve(id)
@@ -25,7 +30,8 @@ class PendingRequest < Request
 	# cache provides better access and removes a trip to db
 	def submit
 		if save
-			submit_to_q
+			submit_request
+			true
 		else
 			false
 		end
@@ -33,7 +39,11 @@ class PendingRequest < Request
 
 	private
 
-	def submit_to_q
+	def answer_request
+		Resque.enqueue(AnswerRequest, self.id, self.accepted?)
+	end
+
+	def submit_request
 		Resque.enqueue(SubmitRequest, self.id, self.to_json(only: [:user_id, :driver_id]))
 	end
 

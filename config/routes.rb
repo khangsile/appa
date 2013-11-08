@@ -10,15 +10,16 @@ Appa::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :registrations, only: [:create]
+      resources :trips, only: :update
       resources :sessions, only: [:create, :destroy]
-
       resources :users, only: [:show, :update, :create] do
         get "requests", to: "requests#index", as: "requests"
       end
       resources :drivers, only: [:index, :show, :update, :create] do
         resources :requests, only: [:create, :update]
         resources :driver_reviews, only: [:index, :create, :update, :destroy, :show]
-        patch "driver_location", to: "drivers#update_location", as: "driver_location"
+        put "driver_location", to: "drivers#update_location", as: "driver_location"
+        patch "driver_location", to: "drivers#update_location"
       end
     end
   end
