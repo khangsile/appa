@@ -34,18 +34,18 @@ module ApiAccessControl
 	end
 
 	def current_user
-		@user ||= get_user_by_token
+		@USER ||= get_user_by_token
 	end
 
 	# Returns the user associated with the authentication token
 	# Returns nil if authentication token is invalid
 	def get_user_by_token
-		user_token = get_auth_token
+		user_token = auth_token
 		user_token && User.find_by(authentication_token: user_token)
 	end
 
 	# Returns the authentication token from the request header
-	def get_auth_token
+	def auth_token
 		request.headers['X-AUTH-TOKEN']
 	end
 

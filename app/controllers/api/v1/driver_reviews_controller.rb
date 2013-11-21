@@ -1,8 +1,10 @@
 module Api
 	module V1
 		class DriverReviewsController < Api::ProtectedResourceController
-			before_filter(only: :create) { authenticate_user }
+			# before_filter(only: :create) { authenticate_user }
 			before_filter(only: [:update,:destroy]) { |c| authorize! c.action_name.to_sym, current_review }
+			load_resource :brequest, only: :create
+			authorize_resource :driver_review, only: :create
 
 			# Get driver reviews
 			# Requires no authentication
@@ -15,7 +17,9 @@ module Api
 			# If validations are not passed, render invalid action
 			def create
 				@review = DriverReview.new(create_driver_review_params)
-				render_invalid_action(@review) unless @review.save
+				@review.driver_id = @brequest.driver_id
+				# render_invalid_action(@review) unless @review.save
+				@review.save!
 				logger.debug @review.errors.messages				
 			end
 
@@ -37,16 +41,16 @@ module Api
 			private
 
 			def current_review
-				@review ||= DriverReview.includes(request: [:user]).find_by(id: params[:id])
+				@review ||= DriverReview.includes(brequest: [:user]).find_by(id: params[:id])
 			end
 
 			def current_request
-				@request ||= Request.find_by(id: params[:request_id])
+				@request ||= Request.find_by(id: params[:brequest_id])
 			end
 
 			def create_driver_review_params
 				params[:user_id] = current_user.id
-				params.permit(:request_id,:content,:rating,:user_id,:driver_id)
+				params.permit(:brequest_id,:content,:rating,:user_id,:driver_id)
 			end
 
 			def update_driver_review_params

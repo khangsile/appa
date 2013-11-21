@@ -21,6 +21,16 @@ module Api
 				end
 			end
 
+			def facebook_login
+				fb = JSON.parse(request.env['omniauth.auth']);
+				token = fb[:credentials][:token]
+				fb_user = FbGraph::User.me(token)
+				if user
+					@user = User.find_by(email: fb_user.email)
+					@user.ensure_authentication_token!
+				end
+			end
+
 			# Destroy the session by resetting the user's authentication token
 			def destroy
 				current_user.reset_authentication_token!

@@ -67,9 +67,9 @@
   - !ruby/object:Rubber::Configuration::RoleItem
     name: web_tools
     options: {}
-  instance_id: i-1beaed7f
+  instance_id: i-ee164f88
   image_type: t1.micro
-  image_id: ami-a9184ac0
+  image_id: ami-a53264cc
   security_groups:
   - appa_production_default
   - appa_production_web
@@ -94,10 +94,10 @@
   - appa_production_graylog_server
   - appa_production_graylog_web
   - appa_production_haproxy
-  external_host: ec2-54-227-146-214.compute-1.amazonaws.com
-  external_ip: 54.227.146.214
-  internal_host: ip-10-178-24-72.ec2.internal
-  internal_ip: 10.178.24.72
+  external_host: ec2-54-205-254-190.compute-1.amazonaws.com
+  external_ip: 54.205.254.190
+  internal_host: ip-10-147-143-115.ec2.internal
+  internal_ip: 10.147.143.115
   zone: us-east-1a
   provider: aws
   platform: linux

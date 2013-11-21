@@ -11,16 +11,23 @@ Appa::Application.routes.draw do
     namespace :v1 do
       resources :registrations, only: [:create]
       resources :trips, only: :update
-      resources :sessions, only: [:create, :destroy]
+      resources :sessions, only: :create
+      delete "sessions", to: "sessions#delete"
+
       resources :users, only: [:show, :update, :create] do
-        get "requests", to: "requests#index", as: "requests"
+        get "requests", to: "brequests#index", as: "brequests"
       end
       resources :drivers, only: [:index, :show, :update, :create] do
-        resources :requests, only: [:create, :update]
-        resources :driver_reviews, only: [:index, :create, :update, :destroy, :show]
+        resources :brequests, only: [:create, :update]
+        resources :driver_reviews, only: [:index, :update, :destroy, :show]
         put "driver_location", to: "drivers#update_location", as: "driver_location"
         patch "driver_location", to: "drivers#update_location"
       end
+      # post "requests/:id/driver_reviews", to: "driver_reviews#create"
+      resources :brequests, only: [] do
+        resources :driver_reviews, only: :create
+      end
+      
     end
   end
 

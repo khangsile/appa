@@ -26,11 +26,12 @@ module Api
 			# If the user has a driver, render invalid action
 			def create
 				if current_user.driver.nil?
-					current_user.create_driver(driver_params)
+					@driver = current_user.create_driver(driver_params)
 				else
 					current_user.driver.errors[:driver] << "already exists"
 					render_invalid_action(current_user.driver)
 				end
+				logger.debug current_user.driver.to_yaml
 			end
 
 			def update_location

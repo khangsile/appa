@@ -21,6 +21,12 @@ class ApplicationController < ActionController::Base
   	end
   end
 
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    respond_to do |format|
+      format.json { render_invalid_action(exception.record) }
+    end
+  end
+
   protected
 
   	def configure_permitted_parameters

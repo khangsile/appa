@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 ruby '2.0.0'
 
-gem 'therubyracer', :group => :assets
+# Authenticate fb tokens for mobile app
+gem 'fb_graph'
+
+# gem 'therubyracer', :group => :assets
+gem 'therubyracer'
 
 gem 'gcm'
 
@@ -18,6 +22,7 @@ end
 
 gem 'activerecord-postgis-adapter'
 gem 'rgeo'
+
 gem 'newrelic_rpm'
 
 # For heroku
@@ -54,6 +59,10 @@ gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
 
 # Include devise gem for authentication system
 gem 'devise'
+
+# Omniauth gem for facebook oauth
+gem 'omniauth'
+gem 'omniauth-facebook'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
