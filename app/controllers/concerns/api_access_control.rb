@@ -33,9 +33,9 @@ module ApiAccessControl
 		render_unauthorized_msg unless current_user && current_user.id == params[:id].to_i
 	end
 
-	def current_user
-		@USER ||= get_user_by_token
-	end
+	# def current_user
+	# 	@USER ||= get_user_by_token
+	# end
 
 	# Returns the user associated with the authentication token
 	# Returns nil if authentication token is invalid

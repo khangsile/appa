@@ -22,7 +22,7 @@ module TokenAuthenticatable
   # Ensure the activerecord has an authentication token
   # The activerecord is saved to the database
   def ensure_authentication_token!
-    reset_authentication_token if authentication_token.blank?
+    reset_authentication_token! if authentication_token.blank?
   end
  
   private

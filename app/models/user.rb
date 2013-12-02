@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :token_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
 
   has_one :driver
@@ -16,8 +16,10 @@ class User < ActiveRecord::Base
   has_many :requests
   has_many :user_reviews, as: :reviewer
   has_many :user_reviews, as: :reviewee
-  has_many :driver_reviews
-  has_many :drivers, through: :driver_reviews
+
+  has_many :posts
+  has_many :comments
+  has_many :trips, foreign_key: 'owner_id'
 
   validates :first_name, presence: true
   validates :last_name, presence: true

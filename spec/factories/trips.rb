@@ -2,7 +2,16 @@
 
 FactoryGirl.define do
   factory :trip do
-    driver_id "MyString"
-    start_time "2013-09-27 11:32:07"
+  	description 'Lolla'
+    cost 3.00
+    min_seats 3
+    start_time Time.now + 10.week
+    association :driver, factory: :user
+    association :owner, factory: :user
+
+    before(:create) do |trip|
+    	trip.set_start(30,30)
+    	trip.set_end(30,35)
+    end
   end
 end

@@ -36,7 +36,7 @@ class DriverReview < ActiveRecord::Base
 	validates :rating, presence: true, numericality: { greater_than_or_equal: 0, less_than_or_equal_to: 5 }
 	validates :driver_id, presence: true
 	validates :user_id, presence: true
-	validates_with AcceptedRequestValidator, if: "!self.request_id.blank?"
-	validates_with UserOwnsRequestValidator, if: "!self.request_id.blank?"
+	# validates_with AcceptedRequestValidator, if: "!self.request_id.blank?"
+	# validates_with UserOwnsRequestValidator, if: "!self.request_id.blank?"
 
 end

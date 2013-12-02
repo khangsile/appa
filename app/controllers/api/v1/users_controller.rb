@@ -1,6 +1,7 @@
 module Api
 	module V1
 		class Api::V1::UsersController < Api::ProtectedResourceController
+			before_filter(only: [:update]) { authenticate_user! }
 			load_and_authorize_resource :user
 
 			# Create a new user

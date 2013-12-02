@@ -1,6 +1,6 @@
 module Api
 	module V1
-		class DriverReviewsController < Api::ProtectedResourceController
+		class CarsController < Api::ProtectedResourceController
 			before_filter(only: :create) { |c| authorize! c.action_name.to_sym, current_driver }
 
 			# Create a car for driver only if user is a driver

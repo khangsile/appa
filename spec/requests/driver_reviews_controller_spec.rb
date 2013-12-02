@@ -18,14 +18,14 @@ describe "DriverReviewsController" do
 			end
 
 			it "creates driver review" do
-				expect{create_review(request.driver,params)}.to change(DriverReview, :count).by(1)
+				expect{create_review(request,params)}.to change(DriverReview, :count).by(1)
 				expect(response).to be_success
 				expect(response.body).to include content
 				expect(request.user.driver_reviews.length).to eq(1)
 			end
 
 			it "updates the driver's rating" do
-				create_review(request.driver,params)
+				create_review(request,params)
 				expect{request.driver.reload}.to change(request.driver, :rating)
 			end
 		end
@@ -35,27 +35,27 @@ describe "DriverReviewsController" do
 				user = FactoryGirl.create :user
 				headers['X-AUTH-TOKEN'] = user.authentication_token
 				# request = FactoryGirl.create(:request, accepted: true)
-				create_review(request.driver,params)
+				create_review(request,params)
 			end
 
 			it "does not create driver review" do
-				expect(response.response_code).to eq(405)
-				expect(response.body).to include "not ridden"
+				expect(response.response_code).to eq(401)
+				# expect(response.body).to include "not ridden"
 			end
 		end
 
-		context "when request was not acccepted by driver" do
+		context "when request was not accepted by driver" do
 			before do
 				bad_request = FactoryGirl.create(:request, accepted: false)
 				headers['X-AUTH-TOKEN'] = bad_request.user.authentication_token
 				params[:request_id] = bad_request.id
-				create_review(bad_request.driver,params)
+				create_review(bad_request,params)
 			end
 
 			it "does not create driver review" do
 				# expect(bad_request.accepted?).to eq(false)
-				expect(response.response_code).to eq(405)
-				expect(response.body).to include "not accepted"
+				expect(response.response_code).to eq(401)
+				# expect(response.body).to include "not accepted"
 			end
 		end
 
@@ -175,8 +175,8 @@ def destroy_review(driver,review)
 	delete api_v1_driver_driver_review_path(driver,review), {}, headers
 end
 
-def create_review(driver,params)
-	post api_v1_driver_driver_reviews_path(driver), params, headers
+def create_review(request,params)
+	post api_v1_request_driver_reviews_path(request), params, headers
 end 
 
 def update_review(driver,review, params)

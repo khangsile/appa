@@ -28,33 +28,51 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
-    # Rails.logger.info user.to_yaml
     user ||= User.new
 
     # Authorization settings on DriverReviews
     can :read, DriverReview
     can [:update,:destroy], DriverReview, user_id: user.id
-    can :create, DriverReview, brequest: { user_id: user.id }
+    can :create, DriverReview, request: { user_id: user.id, accepted: true}
 
     # Authorization settings on Drivers
     can :update, Driver, user_id: user.id
     can :update_location, Driver, user_id: user.id
 
     # Authorization settings on Requests
-    can :update, Brequest do |request|
-      user.driver && user.driver.id == request.driver_id
+    # can :update, Request do |request|
+      # user.driver && user.driver.id == request.driver_id
+    # end
+    # can :index, Request, through: :user
+    # can :read, Request, user_id: user.id
+    # can :create, Request, driver: { active: true } #unless user.id.nil?
+
+    # Authorization settings on Requests
+    can :create, Request
+    can :update, Request, trip: { owner_id: user.id }
+
+    # Authorization settings on Posts
+    can [:create,:read], Post do |post|
+      post.trip.includes?(user)
     end
-    # can :index, Brequest, through: :user
-    can :read, Brequest, user_id: user.id
-    # can :create, Brequest, driver: { active: true } unless user.id.nil?
-    can :create, Brequest do
-      Rails.logger.info @driver.to_yaml
-      # @driver.active
+    can :update, Post, user_id: user.id
+
+    # Authorization settings on Comments
+    can [:create,:read], Comment do |comment|
+      comment.post.trip.includes?(user)
+    end
+    can :update, Comment, user_id: user.id
+    can :destroy, Comment do |comment|
+      comment.user_id == user.id || comment.post.trip.owner_id == user.id
     end
 
     # Authorization settings on Users
     can :update, User, id: user.id
     can [:read,:create], User
+
+    # Authorization settings for Trips
+    can :update, Trip, owner_id: user.id
+    can [:create,:read], Trip
 
     # Authorization settings on Cars
     can :create, Car do |driver|

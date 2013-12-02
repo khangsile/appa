@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 ruby '2.0.0'
 
+# Tagging
+gem 'acts-as-taggable-on'
+
 # Authenticate fb tokens for mobile app
 gem 'fb_graph'
 

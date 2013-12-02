@@ -3,9 +3,8 @@
 FactoryGirl.define do
 	factory :request do
 		user
-		driver
-		accepted true
-		time_accepted Time.now		
+		trip
+		time_sent Time.now		
 	end
 end
 

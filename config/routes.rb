@@ -9,24 +9,36 @@ Appa::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      post "facebook_login", to: "sessions#facebook_login", as: "facebook_login"
       resources :registrations, only: [:create]
-      resources :trips, only: :update
+      # resources :trips, only: :update
       resources :sessions, only: :create
-      delete "sessions", to: "sessions#delete"
+      get "sessions", to: "sessions#show"
+      delete "sessions", to: "sessions#destroy"
 
-      resources :users, only: [:show, :update, :create] do
-        get "requests", to: "brequests#index", as: "brequests"
-      end
-      resources :drivers, only: [:index, :show, :update, :create] do
-        resources :brequests, only: [:create, :update]
-        resources :driver_reviews, only: [:index, :update, :destroy, :show]
-        put "driver_location", to: "drivers#update_location", as: "driver_location"
-        patch "driver_location", to: "drivers#update_location"
-      end
+
+      # resources :users, only: [:show, :update, :create] do
+      #   get "requests", to: "requests#index", as: "requests"
+      # end
+      # resources :drivers, only: [:index, :show, :update, :create] do
+      #   resources :requests, only: [:create, :update]
+      #   resources :driver_reviews, only: [:index, :update, :destroy, :show]
+      #   put "driver_location", to: "drivers#update_location", as: "driver_location"
+      #   patch "driver_location", to: "drivers#update_location"
+      # end
       # post "requests/:id/driver_reviews", to: "driver_reviews#create"
-      resources :brequests, only: [] do
-        resources :driver_reviews, only: :create
+      # resources :requests, only: [] do
+      #   resources :driver_reviews, only: :create
+      # end
+
+      resources :trips, only: [:create, :update, :show, :index], shallow: true do
+        resources :requests, only: [:create, :update]
+        resources :posts, only: [:create, :update, :show] do
+          resources :comments, only: [:create, :update,:destroy]
+        end
       end
+
+      post 'trips/search', to: 'trips#search', as: 'trip/search'
       
     end
   end

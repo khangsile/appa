@@ -1,3 +1,4 @@
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -235,6 +236,14 @@ Devise.setup do |config|
   require "omniauth-facebook"
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development? 
   config.omniauth :facebook, "1415789708655802", "e4197680da69448a351fbdbf9d1448a2"
+
+  require 'devise/strategies/token_authenticatable'
+  # logger.info 'add it'
+  # Add token_authenticatable 
+  config.warden do |manager|
+    manager.strategies.add(:token_authenticatable, Devise::Strategies::TokenAuthenticatable)
+    manager.default_strategies(:scope => :user).unshift :token_authenticatable
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
