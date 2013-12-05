@@ -1,3 +1,5 @@
+require 'trip_search/geo/location'
+
 class Trip < ActiveRecord::Base
 	set_rgeo_factory_for_column(:start_location,
     RGeo::Geographic.spherical_factory(:srid => 4326))	
@@ -41,22 +43,36 @@ class Trip < ActiveRecord::Base
 		self.end_location = factory.point(lon,lat)
 	end
 
-	def self.starts_within(longitude, latitude, distance=50000)
-		where(within_query(:start_location,longitude,latitude,distance)) 
+	def self.order_by_start(loc)
+		order(
+			"ST_distance(Trips.start_location,ST_GeographyFromText('POINT(#{loc.lon} #{loc.lat})')) ASC"
+		) 
 	end
 
-	def self.ends_within(longitude, latitude, distance=50000)
-		where(within_query(:end_location,longitude,latitude,distance))
+	def self.starts_within(loc, distance=50000)
+		if loc.invalid_point?
+			raise ArgumentError.new "Location's point is invalid."
+		else
+			where(within_query(:start_location,loc,distance)) 
+		end
+	end
+
+	def self.ends_within(loc, distance=50000)
+		if loc.invalid_point?
+			raise ArgumentError.new "Location's point is invalid."
+		else
+			where(within_query(:end_location,loc,distance))
+		end
 	end
 
 	private
 
-	def self.within_query(column, longitude, latitude, distance)
+	def self.within_query(column, loc, distance)
 		%{
 			ST_DWithin(
 				Trips.%s,
 				ST_GeographyFromText('SRID=4326;POINT(%f %f)'),
 				%f)
-			} % [column.to_s, longitude, latitude, distance] unless longitude.blank? || latitude.blank?
+			} % [column.to_s, loc.lon, loc.lat, distance]
 	end
 end

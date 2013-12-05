@@ -1,3 +1,5 @@
+require 'trip_search/geo/location'
+
 module Api
 	module V1
 		class TripsController < Api::ProtectedResourceController
@@ -26,7 +28,17 @@ module Api
 			private
 
 			def trip_params
-				params.permit(:description, :cost, :min_seats, :start_time, tag_list: [])
+				build_locs.merge params.permit(:description,:cost,
+					:min_seats,:start_time,tag_list: [])
+			end
+
+			def build_locs
+				st = TripSearch::Geo::Location.new(params[:start_location])
+				ed = TripSearch::Geo::Location.new(params[:end_location])
+				stp = st.invalid_point? ? nil : st.coord
+				edp = ed.invalid_point? ? nil : ed.coord
+				params[:tag_list] += [st.title, ed.title]
+				{start_location: stp, end_location: edp}
 			end
 
 			def update_trip_params

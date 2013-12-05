@@ -16,10 +16,10 @@ Appa::Application.routes.draw do
       get "sessions", to: "sessions#show"
       delete "sessions", to: "sessions#destroy"
 
+      post "search", to: "search#create", as: "search"
 
-      # resources :users, only: [:show, :update, :create] do
-      #   get "requests", to: "requests#index", as: "requests"
-      # end
+      resources :users, only: [:show, :update, :create]
+
       # resources :drivers, only: [:index, :show, :update, :create] do
       #   resources :requests, only: [:create, :update]
       #   resources :driver_reviews, only: [:index, :update, :destroy, :show]
