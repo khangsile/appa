@@ -6,18 +6,14 @@ module Api
 			before_filter(except: [:show,:index]) { authenticate_user! }
 			load_and_authorize_resource :trip
 
-			def index
-				# @trips = Trip.tagged_with(params[:tag_list])
-				@trips = trip_search
-			end
-
 			def show
 				render 'api/v1/trips/trip'
 			end
 
 			def create
 				@trip = current_user.trips.create!(trip_params)
-				render 'api/v1/trips/trip'
+				Rails.logger.info @trip.errors.messages 
+				# render 'api/v1/trips/trip'
 			end
 
 			def update
@@ -28,27 +24,23 @@ module Api
 			private
 
 			def trip_params
-				build_locs.merge params.permit(:description,:cost,
+				params[:start_time] = DateTime.parse(params[:start_time])
+				Rails.logger.info params[:start_time]
+				build_coords.merge params.permit(:description,:cost,
 					:min_seats,:start_time,tag_list: [])
 			end
 
-			def build_locs
-				st = TripSearch::Geo::Location.new(params[:start_location])
-				ed = TripSearch::Geo::Location.new(params[:end_location])
-				stp = st.invalid_point? ? nil : st.coord
-				edp = ed.invalid_point? ? nil : ed.coord
-				params[:tag_list] += [st.title, ed.title]
-				{start_location: stp, end_location: edp}
+			def build_coords
+				Rails.logger.info params[:start_location]
+				start = TripSearch::Geo::Location.new(params[:start_location])
+				dest = TripSearch::Geo::Location.new(params[:end_location])
+
+				{start_location: start.coord, end_location: dest.coord,
+					start_title: start.title, end_title: dest.title}
 			end
 
 			def update_trip_params
 				params.permit(:description, :cost, :min_seats, tag_list: [])
-			end
-
-			def trip_search
-				Trip.tagged_with(params[:tag_list])
-					.starts_within(st_loc[:longitude],st_loc[:latitude],st_loc[:distance])
-					.ends_within(end_loc[:longitude],end_loc[:latitude],end_loc[:distance])
 			end
 
 			def st_loc

@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 ruby '2.0.0'
 
+# Paperclip for pictures
+gem 'paperclip'
+
+gem 'aws-s3', :require => 'aws/s3'
+
 # Tagging
 gem 'acts-as-taggable-on'
 

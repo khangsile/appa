@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :token_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  # paperclip profile_pic
+  has_attached_file :profile_pic, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
+
+  has_one :fb_profile_pic
   has_one :driver
   has_one :device
   has_many :requests

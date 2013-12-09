@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid do |exception|
     respond_to do |format|
       format.json { render_invalid_action(exception.record) }
+      Rails.logger.info exception.record.errors.messages
     end
   end
 

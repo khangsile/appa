@@ -35,6 +35,7 @@ module Api
 				if @user.nil?
 					@user = User.create!(fb_params(fb_user))
 				end
+				FbProfilePic.find_or_create_by!(user_id: @user.id, url: fb_user.picture)
 				@user.ensure_authentication_token!
 				render 'api/v1/sessions/create'
 			end

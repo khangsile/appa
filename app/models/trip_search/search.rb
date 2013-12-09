@@ -16,14 +16,14 @@ class Search
 	end
 
 	def execute
-		return Trip.none if invalid?
+		# return Trip.none if invalid?
 		results = base_query
-		results = results.order_by_start(@start_location.lon,@start_location.lat) unless @start_location.invalid_point?
+		results = results.order_by_start(@start_location) if @start_location.valid?
 		return results
 	end
 
 	def invalid?
-		@end_location.invalid_point? && @end_location.title.nil?
+		!@end_location.valid?
 	end
 
 	private
@@ -38,7 +38,7 @@ class Search
 	end
 
 	def ends_within_sql
-		unless @end_location.invalid_point?
+		if @end_location.valid?
 			"#{Trip.ends_within(@end_location).to_sql}"
 		else
 			"#{Trip.where('1 = 0').to_sql}"

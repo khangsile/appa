@@ -5,7 +5,9 @@ class Trip < ActiveRecord::Base
     RGeo::Geographic.spherical_factory(:srid => 4326))	
 
 	set_rgeo_factory_for_column(:end_location,
-    RGeo::Geographic.spherical_factory(:srid => 4326))	
+    RGeo::Geographic.spherical_factory(:srid => 4326))
+
+	before_create { self.tag_list += [self.start_title, self.end_title] }
 
 	has_many :posts
 	has_many :requests
@@ -17,10 +19,20 @@ class Trip < ActiveRecord::Base
 	# tagging
 	acts_as_taggable
 
+	validates :start_title, presence: true
+	validates :end_title, presence: true
 	validates :start_location, presence: true
 	validates :end_location, presence: true
 	validates :min_seats, numericality: { greater_than_or_equal_to: 2 }
 	validates :cost, numericality: { greater_than_or_equal_to: 0 }
+
+	def start_loc
+		TripSearch::Geo::Location.new(coord: self.start_location, title: self.start_title)
+	end
+
+	def end_loc
+		TripSearch::Geo::Location.new(coord: self.end_location, title: self.end_title)
+	end
 
 	# Need to fix
 	def accepted_users
@@ -50,18 +62,18 @@ class Trip < ActiveRecord::Base
 	end
 
 	def self.starts_within(loc, distance=50000)
-		if loc.invalid_point?
-			raise ArgumentError.new "Location's point is invalid."
-		else
+		if loc.valid?
 			where(within_query(:start_location,loc,distance)) 
+		else
+			raise ArgumentError.new "Location's point is invalid."			
 		end
 	end
 
 	def self.ends_within(loc, distance=50000)
-		if loc.invalid_point?
-			raise ArgumentError.new "Location's point is invalid."
-		else
+		if loc.valid?
 			where(within_query(:end_location,loc,distance))
+		else
+			raise ArgumentError.new "Location's point is invalid."
 		end
 	end
 

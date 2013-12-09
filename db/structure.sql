@@ -184,6 +184,36 @@ ALTER SEQUENCE drivers_id_seq OWNED BY drivers.id;
 
 
 --
+-- Name: fb_profile_pics; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE fb_profile_pics (
+    id integer NOT NULL,
+    url character varying(255),
+    user_id integer
+);
+
+
+--
+-- Name: fb_profile_pics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE fb_profile_pics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fb_profile_pics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE fb_profile_pics_id_seq OWNED BY fb_profile_pics.id;
+
+
+--
 -- Name: posts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -368,7 +398,9 @@ CREATE TABLE trips (
     min_seats integer,
     owner_id integer,
     driver_id integer,
-    description character varying(255)
+    description character varying(255),
+    start_title character varying(255),
+    end_title character varying(255)
 );
 
 
@@ -447,7 +479,11 @@ CREATE TABLE users (
     last_name character varying(255),
     authentication_token character varying(255),
     provider character varying(255),
-    uid character varying(255)
+    uid character varying(255),
+    profile_pic_file_name character varying(255),
+    profile_pic_content_type character varying(255),
+    profile_pic_file_size integer,
+    profile_pic_updated_at timestamp without time zone
 );
 
 
@@ -503,6 +539,13 @@ ALTER TABLE ONLY driver_reviews ALTER COLUMN id SET DEFAULT nextval('driver_revi
 --
 
 ALTER TABLE ONLY drivers ALTER COLUMN id SET DEFAULT nextval('drivers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY fb_profile_pics ALTER COLUMN id SET DEFAULT nextval('fb_profile_pics_id_seq'::regclass);
 
 
 --
@@ -599,6 +642,14 @@ ALTER TABLE ONLY driver_reviews
 
 ALTER TABLE ONLY drivers
     ADD CONSTRAINT drivers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: fb_profile_pics_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY fb_profile_pics
+    ADD CONSTRAINT fb_profile_pics_pkey PRIMARY KEY (id);
 
 
 --
@@ -820,3 +871,9 @@ INSERT INTO schema_migrations (version) VALUES ('20131130074919');
 INSERT INTO schema_migrations (version) VALUES ('20131130133131');
 
 INSERT INTO schema_migrations (version) VALUES ('20131202014140');
+
+INSERT INTO schema_migrations (version) VALUES ('20131206034617');
+
+INSERT INTO schema_migrations (version) VALUES ('20131207215334');
+
+INSERT INTO schema_migrations (version) VALUES ('20131209042147');

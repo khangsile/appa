@@ -4,7 +4,7 @@ describe 'Trips API' do
 	let(:headers) { {'HTTP_ACCEPT' => 'application/json', 'X-AUTH-TOKEN' => 'fill_in' } }
 
 	describe "#create" do
-		let(:params) { {description: 'Titleist', start_time: Time.now, min_seats: 3, cost: 30.00, tag_list: ['lolla','bon']} }
+		let(:params) { {description: 'Titleist', start_time: Time.now, min_seats: 3, cost: 30.00, tag_list: ['lolla','bon'], start_location: { longitude: 30, latitude: 30, title: 'start' }, end_location: { longitude: 30, latitude: 30, title: 'end' }} }
 		let(:user) { FactoryGirl.create :user }
 
 		context "when user is authenticated" do

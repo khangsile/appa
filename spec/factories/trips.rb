@@ -8,6 +8,8 @@ FactoryGirl.define do
     start_time Time.now + 10.week
     association :driver, factory: :user
     association :owner, factory: :user
+    start_title 'start'
+    end_title 'end'
 
     before(:create) do |trip|
     	trip.set_start(30,30)
