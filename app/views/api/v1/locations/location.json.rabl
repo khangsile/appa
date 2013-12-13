@@ -1,2 +1,3 @@
-object @loc
-attributes :title, lon: :longitude, lat: :latitude
+object @location
+attributes :title
+attributes :lon => :longitude, :lat => :latitude

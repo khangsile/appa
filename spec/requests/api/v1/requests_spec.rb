@@ -60,6 +60,91 @@ describe 'Requests API' do
 		end
 
 	end
+
+	describe "#outbox" do
+		let(:users) { FactoryGirl.create_list :user, 5 }
+		let(:user) { FactoryGirl.create :user }
+		context "when user is authenticated" do
+			before do
+				FactoryGirl.create_list :request, 5, user: user
+				headers['X-AUTH-TOKEN'] = user.authentication_token
+				get_outbox_requests
+			end
+
+			it "should get user's outgoing requests" do
+				expect(response).to be_success
+				expect(json.length).to eq(5)				
+			end
+		end
+
+		context "when user is not authenticated" do
+			before do
+				FactoryGirl.create :request, user: user
+				get_outbox_requests
+			end
+
+			it "should not get outgoing requests" do
+				expect(response.response_code).to eq(401)				
+			end			
+		end
+
+		context "when user does have any requests" do
+			before do				
+				FactoryGirl.create_list :request, 5, user: user
+				headers['X-AUTH-TOKEN'] = FactoryGirl.create(:user).authentication_token
+				get_outbox_requests
+			end
+
+			it "should get user's outgoing requests" do
+				expect(response).to be_success
+				expect(json.length).to eq(0)				
+			end
+		end
+	end
+
+	describe "#inbox" do
+		context "when user is authenticated" do
+			before do
+				FactoryGirl.create_list :request, 5, trip: trip
+				headers['X-AUTH-TOKEN'] = trip.owner.authentication_token
+				get_inbox_requests
+			end
+			it "should get incoming requests" do
+				expect(response).to be_success
+				expect(json.length).to eq(5)
+			end
+		end
+
+		context "when user does not have any requests" do
+			before do				
+				FactoryGirl.create_list :request, 5, trip: trip
+				headers['X-AUTH-TOKEN'] = FactoryGirl.create(:user).authentication_token
+				get_inbox_requests
+			end
+
+			it "should get no incoming requests" do
+				expect(response).to be_success
+				expect(json.length).to eq(0)				
+			end
+		end
+
+		context "when user is not authenticated" do
+			before do				
+				FactoryGirl.create_list :request, 5, trip: trip
+				get_inbox_requests
+			end
+			
+			it { expect(response.response_code).to eq(401) }
+		end
+	end
+end
+
+def get_outbox_requests
+	get api_v1_requests_path, { type: 'outgoing' }, headers
+end
+
+def get_inbox_requests
+	get api_v1_requests_path, { type: 'incoming' }, headers
 end
 
 def update_request(request, params)

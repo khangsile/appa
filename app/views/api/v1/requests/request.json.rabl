@@ -1,5 +1,5 @@
 object @request
-attributes :id, :time_sent, :user_id, :accepted
-child(:driver) { extends('api/v1/drivers/driver') }
-
+attributes :id, :accepted
+child(:trip) { extends('api/v1/trips/trip') }
+child(:user) { extends('api/v1/users/user_base', locals: { hide_email: false }) }
 

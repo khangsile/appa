@@ -3,8 +3,17 @@ require 'trip_search/geo/location'
 module Api
 	module V1
 		class TripsController < Api::ProtectedResourceController
-			before_filter(except: [:show,:index]) { authenticate_user! }
+			# before_filter(except: [:show]) { env['warden'].authenticate(:token_authenticatable) }
 			load_and_authorize_resource :trip
+
+			def index
+				Rails.logger.info current_user.to_yaml
+				@trips = current_user.all_trips
+			end
+
+			def summary
+				render 'api/v1/trips/trip_summary'
+			end
 
 			def show
 				render 'api/v1/trips/trip'
@@ -12,7 +21,7 @@ module Api
 
 			def create
 				@trip = current_user.trips.create!(trip_params)
-				Rails.logger.info @trip.errors.messages 
+				Rails.logger.info @trip.errors.messages
 				# render 'api/v1/trips/trip'
 			end
 

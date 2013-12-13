@@ -3,7 +3,18 @@ module Api
 		class Api::V1::RequestsController < Api::ProtectedResourceController
 			before_filter { authenticate_user! }
 			load_resource :trip, only: :create
-			load_and_authorize_resource :request, through: :trip, shallow: true
+			load_and_authorize_resource :request, through: :trip, shallow: true, except: :index
+
+			def index
+				case params[:type]
+				when 'incoming'
+					Rails.logger.info 'incoming'
+					@requests = current_user.incoming_requests
+				when 'outgoing'
+					Rails.logger.info 'outgoing'					
+					@requests = current_user.requests
+				end
+			end
 
 			def create
 				@trip.requests.create!(user_id: current_user.id)
@@ -11,7 +22,7 @@ module Api
 			end
 
 			def update
-				# @request.update!(accepted: params[:accepted])
+				Rails.logger.info 'ANSWER REQUEST!'
 				@request.answer!(params.permit(:accepted))
 			end
 

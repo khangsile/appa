@@ -15,6 +15,7 @@ class Request < ActiveRecord::Base
 	belongs_to :user, dependent: :destroy
 	belongs_to :trip, dependent: :destroy	
 
+	validates_uniqueness_of :user_id, scope: :trip_id
 	validates :user_id, presence: true
 	validates :trip_id, presence: true
 	validate :trip_has_not_passed

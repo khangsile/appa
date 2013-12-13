@@ -15,6 +15,7 @@ Appa::Application.routes.draw do
       resources :sessions, only: :create
       get "sessions", to: "sessions#show"
       delete "sessions", to: "sessions#destroy"
+      post "me", to:  "sessions#me"
 
       post "search", to: "search#create", as: "search"
 
@@ -37,6 +38,8 @@ Appa::Application.routes.draw do
           resources :comments, only: [:create, :update,:destroy]
         end
       end
+      get 'trips/:id/summary', to: 'trips#summary', as: 'trip/summary'
+      resources :requests, only: [:index]
 
       post 'trips/search', to: 'trips#search', as: 'trip/search'
       

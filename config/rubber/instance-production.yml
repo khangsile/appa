@@ -62,14 +62,26 @@
     name: haproxy
     options: {}
   - !ruby/object:Rubber::Configuration::RoleItem
+    name: redis
+    options: {}
+  - !ruby/object:Rubber::Configuration::RoleItem
+    name: redis_master
+    options: {}
+  - !ruby/object:Rubber::Configuration::RoleItem
+    name: resque_web
+    options: {}
+  - !ruby/object:Rubber::Configuration::RoleItem
+    name: resque_worker
+    options: {}
+  - !ruby/object:Rubber::Configuration::RoleItem
     name: web
     options: {}
   - !ruby/object:Rubber::Configuration::RoleItem
     name: web_tools
     options: {}
-  instance_id: i-ee164f88
-  image_type: t1.micro
-  image_id: ami-a53264cc
+  instance_id: i-359ab448
+  image_type: m1.medium
+  image_id: ami-eafa5883
   security_groups:
   - appa_production_default
   - appa_production_web
@@ -94,13 +106,17 @@
   - appa_production_graylog_server
   - appa_production_graylog_web
   - appa_production_haproxy
-  external_host: ec2-54-205-254-190.compute-1.amazonaws.com
-  external_ip: 54.205.254.190
-  internal_host: ip-10-147-143-115.ec2.internal
-  internal_ip: 10.147.143.115
-  zone: us-east-1a
+  - appa_production_redis
+  - appa_production_redis_master
+  - appa_production_resque_web
+  - appa_production_resque_worker
+  external_host: ec2-54-224-104-184.compute-1.amazonaws.com
+  external_ip: 54.224.104.184
+  internal_host: ip-10-182-158-230.ec2.internal
+  internal_ip: 10.182.158.230
+  zone: us-east-1c
   provider: aws
   platform: linux
-  root_device_type: ebs
+  root_device_type: instance-store
 - volumes: {}
   static_ips: {}

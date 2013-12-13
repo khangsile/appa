@@ -11,7 +11,7 @@ class Trip < ActiveRecord::Base
 
 	has_many :posts
 	has_many :requests
-	has_many :users, through: :requests
+	has_many :users, -> { where requests: {accepted: true} }, through: :requests
 	has_many :trip_reviews
 	belongs_to :driver, class_name: 'User', foreign_key: 'driver_id'
 	belongs_to :owner, class_name: 'User', foreign_key: 'owner_id'
@@ -25,6 +25,8 @@ class Trip < ActiveRecord::Base
 	validates :end_location, presence: true
 	validates :min_seats, numericality: { greater_than_or_equal_to: 2 }
 	validates :cost, numericality: { greater_than_or_equal_to: 0 }
+
+	scope :active, -> { where("start_time > ?", Time.now) }	
 
 	def start_loc
 		TripSearch::Geo::Location.new(coord: self.start_location, title: self.start_title)

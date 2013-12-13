@@ -5,6 +5,7 @@ module Api
 		class SearchController < Api::ProtectedResourceController
 
 			def create
+				Rails.logger.info current_user.to_yaml
 				search = Search.new search_params
 				@results = search.execute
 			end

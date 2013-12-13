@@ -4,7 +4,7 @@ describe 'Trips API' do
 	let(:headers) { {'HTTP_ACCEPT' => 'application/json', 'X-AUTH-TOKEN' => 'fill_in' } }
 
 	describe "#create" do
-		let(:params) { {description: 'Titleist', start_time: Time.now, min_seats: 3, cost: 30.00, tag_list: ['lolla','bon'], start_location: { longitude: 30, latitude: 30, title: 'start' }, end_location: { longitude: 30, latitude: 30, title: 'end' }} }
+		let(:params) { {description: 'Titleist', start_time: DateTime.now, min_seats: 3, cost: 30.00, tag_list: ['lolla','bon'], start_location: { longitude: 30, latitude: 30, title: 'start' }, end_location: { longitude: 30, latitude: 30, title: 'end' }} }
 		let(:user) { FactoryGirl.create :user }
 
 		context "when user is authenticated" do
@@ -84,6 +84,38 @@ describe 'Trips API' do
 
 	end
 
+	describe "#index" do
+		let(:user) { FactoryGirl.create :user }
+
+		context "when user is authenticated" do
+			before do
+				FactoryGirl.create_list :request, 5, user: user, accepted: true
+				FactoryGirl.create_list :trip, 5, owner: user
+				headers['X-AUTH-TOKEN'] = user.authentication_token
+				get_trips
+			end
+
+			it "should get user's trips" do
+				expect(response).to be_success
+				expect(json.length).to eq(10)			
+			end
+		end
+
+		context "when user is not authenticated" do
+			before do
+				FactoryGirl.create_list :request, 5, user: user, accepted: true
+				get_trips
+			end
+
+			it { expect(response.response_code).to eq(401) }
+		end
+
+	end
+
+end
+
+def get_trips
+	get api_v1_trips_path, {}, headers
 end
 
 def show_trip(trip)

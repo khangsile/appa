@@ -2,14 +2,16 @@ class User < ActiveRecord::Base
   include TokenAuthenticatable
 
   before_save do
-   self.email = self.email.downcase
-   self.ensure_authentication_token
+    self.email = self.email.downcase
+    self.ensure_authentication_token
   end
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :token_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  # devise :timeoutable, :timeout_in => 15.minutes
 
   # paperclip profile_pic
   has_attached_file :profile_pic, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
@@ -28,6 +30,10 @@ class User < ActiveRecord::Base
   validates :first_name, presence: true
   validates :last_name, presence: true
 
+  def incoming_requests
+    Request.joins(:trip).includes(:trip).where(trips: { owner_id: self.id })
+  end
+
   def full_name
     "#{first_name} #{last_name}".titleize
   end
@@ -38,6 +44,11 @@ class User < ActiveRecord::Base
 
   def received_user_reviews
   	UserReview.where(reviewee: self)
+  end
+
+  def all_trips
+    Trip.joins(:requests).where(requests: { accepted: true, user_id: self.id }) +
+    Trip.where(owner_id: self.id)
   end
 
 end

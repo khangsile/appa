@@ -16,8 +16,8 @@ class Search
 	end
 
 	def execute
-		# return Trip.none if invalid?
-		results = base_query
+		return Trip.none if invalid?	
+		results = base_query.includes(:owner,:tags)
 		results = results.order_by_start(@start_location) if @start_location.valid?
 		return results
 	end
@@ -31,7 +31,7 @@ class Search
 	def base_query		
 		Trip.from("
 			(
-				(#{Trip.tagged_with(tag_list, any: true).to_sql}) union
+				(#{Trip.active.tagged_with(tag_list, any: true).to_sql}) union
 				(#{ends_within_sql})
 			) #{Trip.table_name}
 		")
@@ -39,7 +39,7 @@ class Search
 
 	def ends_within_sql
 		if @end_location.valid?
-			"#{Trip.ends_within(@end_location).to_sql}"
+			"#{Trip.active.ends_within(@end_location).to_sql}"
 		else
 			"#{Trip.where('1 = 0').to_sql}"
 		end

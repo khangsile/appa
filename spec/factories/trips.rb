@@ -5,7 +5,7 @@ FactoryGirl.define do
   	description 'Lolla'
     cost 3.00
     min_seats 3
-    start_time Time.now + 10.week
+    start_time DateTime.now + 10.week
     association :driver, factory: :user
     association :owner, factory: :user
     start_title 'start'

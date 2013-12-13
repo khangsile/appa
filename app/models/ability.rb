@@ -48,7 +48,7 @@ class Ability
     # can :create, Request, driver: { active: true } #unless user.id.nil?
 
     # Authorization settings on Requests
-    can :create, Request
+    can [:create,:index], Request
     can :update, Request, trip: { owner_id: user.id }
 
     # Authorization settings on Posts
@@ -73,6 +73,11 @@ class Ability
     # Authorization settings for Trips
     can :update, Trip, owner_id: user.id
     can [:create,:read], Trip
+    can :summary, Trip do |trip|
+      Rails.logger.info 'summary'
+      Rails.logger.info user.to_yaml
+      trip.includes?(user) || trip.owner_id == user.id
+    end
 
     # Authorization settings on Cars
     can :create, Car do |driver|

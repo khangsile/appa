@@ -12,8 +12,8 @@ gem 'acts-as-taggable-on'
 # Authenticate fb tokens for mobile app
 gem 'fb_graph'
 
-# gem 'therubyracer', :group => :assets
-gem 'therubyracer'
+gem 'therubyracer', :group => :assets
+# gem 'libv8'
 
 gem 'gcm'
 
@@ -34,7 +34,7 @@ gem 'rgeo'
 gem 'newrelic_rpm'
 
 # For heroku
-gem 'rails_12factor', group: :production
+# gem 'rails_12factor', group: :production
 
 group :development, :test do
 	# Use sqlite3 as the database for Active Record
@@ -117,3 +117,6 @@ gem 'open4'
 gem 'gelf'
 gem 'graylog2_exceptions', :git => 'git://github.com/wr0ngway/graylog2_exceptions.git'
 gem 'graylog2-resque'
+gem 'resque', :require => 'resque/server'
+gem 'resque-pool'
+gem 'puma'

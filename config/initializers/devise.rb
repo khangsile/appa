@@ -1,11 +1,10 @@
-
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
-  config.secret_key = '08bd7ca65c2da0da442024decc93065de571427b2b056c7ad97c139715ec93c98c8e8489b2fa993f77f5043c002272a290c9358649a38772410541b1d3cadcc9'
+  config.secret_key = 'd435d7bee82ca7e36447abbd60968dcb770889b17e1109a52fe4b2e34b7398ee98a1ad5e19d4317090f5937463400f03d9db2e5b57bb5cdf07bab1460c74dd22'
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -15,6 +14,14 @@ Devise.setup do |config|
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
+
+  # Add token authentication to warden for API
+  require 'devise/strategies/token_authenticatable'
+  config.warden do |manager|
+    manager.strategies.add(:token_authenticatable, Devise::Strategies::TokenAuthenticatable)
+    manager.default_strategies(:scope => :user).unshift :token_authenticatable
+    # manager.default_strategies.unshift :token_authenticatable
+  end
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
@@ -57,12 +64,9 @@ Devise.setup do |config|
 
   # Tell if authentication through HTTP Auth is enabled. False by default.
   # It can be set to an array that will enable http authentication only for the
-  # given strategies, for example, `config.http_authenticatable = [:token]` will
-  # enable it only for token authentication. The supported strategies are:
+  # given strategies, for example, `config.http_authenticatable = [:database]` will
+  # enable it only for database authentication. The supported strategies are:
   # :database      = Support basic authentication with authentication key + password
-  # :token         = Support basic authentication with token authentication key
-  # :token_options = Support token authentication with options as defined in
-  #                  http://api.rubyonrails.org/classes/ActionController/HttpAuthentication/Token.html
   # config.http_authenticatable = false
 
   # If http headers should be returned for AJAX requests. True by default.
@@ -77,7 +81,7 @@ Devise.setup do |config|
   # config.paranoid = true
 
   # By default Devise will store the user in session. You can skip storage for
-  # :http_auth and :token_auth by adding those symbols to the array below.
+  # particular strategies by setting this option.
   # Notice that if you are skipping storage for all authentication paths, you
   # may want to disable generating routes to Devise's sessions controller by
   # passing :skip => :sessions to `devise_for` in your config/routes.rb
@@ -99,7 +103,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 10
 
   # Setup a pepper to generate the encrypted password.
-  # config.pepper = '234b11c4a55f82d52747dad4059c5e85b7639e9b0402a7673c4301d93be632a653fa1b19224bd1a31ff7018d7e0350353a60355ce2c18278a853d9477b3576ed'
+  # config.pepper = '4f844a1a0f4ffb1ebf874b9fa120a791ef6a9513a7f3e6b85eee488dcc85be34c03a5270601a6a3ca58cf98b7e203f5fe2da310d2a4947b1db8444faf0ce88cb'
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without
@@ -177,6 +181,9 @@ Devise.setup do |config|
   # Time interval to unlock the account if :time is enabled as unlock_strategy.
   # config.unlock_in = 1.hour
 
+  # Warn on the last attempt before the account is locked.
+  # config.last_attempt_warning = false
+
   # ==> Configuration for :recoverable
   #
   # Defines which key will be used when recovering the password for an account
@@ -196,10 +203,6 @@ Devise.setup do |config|
   #
   # Require the `devise-encryptable` gem when using anything other than bcrypt
   # config.encryptor = :sha512
-
-  # ==> Configuration for :token_authenticatable
-  # Defines name of the authentication token params key
-  config.token_authentication_key = :auth_token
 
   # ==> Scopes configuration
   # Turn scoped views on. Before rendering "sessions/new", it will first check for
@@ -233,17 +236,6 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  require "omniauth-facebook"
-  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development? 
-  config.omniauth :facebook, "1415789708655802", "e4197680da69448a351fbdbf9d1448a2"
-
-  require 'devise/strategies/token_authenticatable'
-  # logger.info 'add it'
-  # Add token_authenticatable 
-  config.warden do |manager|
-    manager.strategies.add(:token_authenticatable, Devise::Strategies::TokenAuthenticatable)
-    manager.default_strategies(:scope => :user).unshift :token_authenticatable
-  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
