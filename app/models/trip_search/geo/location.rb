@@ -34,6 +34,9 @@ module TripSearch
 
 	  	def coord
 	  		factory = Trip.rgeo_factory_for_column(:start_location)
+	  		if factory.is_a?(Proc)
+          factory = factory.call({hello: 3}) # blew up because I wasn't passing anything in to it, but passing {} into it fixed it now
+        end
 	  		@coord ||= invalid_point? ? nil : factory.point(@lon,@lat)
 	  	end
 

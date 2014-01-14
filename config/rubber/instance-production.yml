@@ -79,9 +79,9 @@
   - !ruby/object:Rubber::Configuration::RoleItem
     name: web_tools
     options: {}
-  instance_id: i-359ab448
-  image_type: m1.medium
-  image_id: ami-eafa5883
+  instance_id: i-471c0668
+  image_type: t1.micro
+  image_id: ami-a53264cc
   security_groups:
   - appa_production_default
   - appa_production_web
@@ -110,13 +110,13 @@
   - appa_production_redis_master
   - appa_production_resque_web
   - appa_production_resque_worker
-  external_host: ec2-54-224-104-184.compute-1.amazonaws.com
-  external_ip: 54.224.104.184
-  internal_host: ip-10-182-158-230.ec2.internal
-  internal_ip: 10.182.158.230
-  zone: us-east-1c
+  external_host: ec2-54-196-208-148.compute-1.amazonaws.com
+  external_ip: 54.196.208.148
+  internal_host: ip-10-239-48-66.ec2.internal
+  internal_ip: 10.239.48.66
+  zone: us-east-1d
   provider: aws
   platform: linux
-  root_device_type: instance-store
+  root_device_type: ebs
 - volumes: {}
   static_ips: {}

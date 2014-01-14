@@ -1,5 +1,7 @@
 module Api
 	class Api::ProtectedResourceController < Api::BaseController
-		include ApiAccessControl
+		include TokenAuthenticatableHandler
+
+		before_filter { authenticate_user_from_token! }
 	end
 end

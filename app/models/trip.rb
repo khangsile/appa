@@ -7,7 +7,7 @@ class Trip < ActiveRecord::Base
 	set_rgeo_factory_for_column(:end_location,
     RGeo::Geographic.spherical_factory(:srid => 4326))
 
-	before_create { self.tag_list += [self.start_title, self.end_title] }
+	before_create { self.tag_list += [self.end_title] }
 
 	has_many :posts
 	has_many :requests

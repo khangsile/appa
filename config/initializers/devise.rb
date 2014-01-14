@@ -15,14 +15,6 @@ Devise.setup do |config|
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 
-  # Add token authentication to warden for API
-  require 'devise/strategies/token_authenticatable'
-  config.warden do |manager|
-    manager.strategies.add(:token_authenticatable, Devise::Strategies::TokenAuthenticatable)
-    manager.default_strategies(:scope => :user).unshift :token_authenticatable
-    # manager.default_strategies.unshift :token_authenticatable
-  end
-
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
@@ -85,7 +77,7 @@ Devise.setup do |config|
   # Notice that if you are skipping storage for all authentication paths, you
   # may want to disable generating routes to Devise's sessions controller by
   # passing :skip => :sessions to `devise_for` in your config/routes.rb
-  config.skip_session_storage = [:http_auth, :token_auth]
+  config.skip_session_storage = [:http_auth]
 
   # By default, Devise cleans up the CSRF token on authentication to
   # avoid CSRF token fixation attacks. This means that, when using AJAX

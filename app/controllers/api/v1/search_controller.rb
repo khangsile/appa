@@ -6,7 +6,7 @@ module Api
 
 			def create
 				Rails.logger.info current_user.to_yaml
-				search = Search.new search_params
+				search = TripSearch::Search.new search_params
 				@results = search.execute
 			end
 
